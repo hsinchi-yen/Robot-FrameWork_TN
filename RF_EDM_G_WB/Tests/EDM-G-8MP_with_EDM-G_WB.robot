@@ -141,7 +141,13 @@ Case TNPT-1000
     3D Glmark Benchmark Test
 
 Case TNPT-1001     
-    [Tags]              Test A-System and Function    test
+    [Tags]              Test A-System and Function    
     [Documentation]     Memtester with Fixed memory size
     Memtester Test 
     Stressapptest Test 
+
+Case TNPT-1002      
+    [Tags]              Test A-System and Function    wifi
+    [Documentation]     Wifi connection test  
+    Wifi Connection test  
+    #Wifi Connection test

@@ -3,7 +3,6 @@ Resource        ../Resources/Common_Params.robot
 
 *** Variables ***
 ${ETH_INF}          eth0
-${WIFI_INF}         wlan0
 ${BT_INF}           hci0
 
 *** Keywords ***

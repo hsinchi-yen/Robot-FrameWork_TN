@@ -23,6 +23,7 @@ Resource          ../Resources/Spi_Device_Test.robot
 Resource          ../Resources/I2c_Bus_Test.robot
 Resource          ../Resources/Display_test.robot
 Resource          ../Resources/Memory_test.robot
+Resource          ../Resources/Wifi_Connection_test.robot
 
 *** Variables ***
 # command share variables between DUT and Test PC
@@ -31,6 +32,7 @@ ${SERIAL_PORT}          /dev/ttyUSB0
 ${ETH_INF}              eth0
 ${LOGIN_PROMPT}         edm-g-imx8mm login:
 ${LOGIN_ACC}            root
+${WIFI_INF}             wlan0
 
 #your test pc
 ${CONSOLE_ETH_INF}      enp6s0
