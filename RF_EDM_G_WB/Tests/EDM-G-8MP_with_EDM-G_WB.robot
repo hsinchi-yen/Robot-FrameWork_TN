@@ -50,7 +50,7 @@ Case TNPT-158
     Send Reboot command then Check Reboot State And Relogin
 
 Case TNPT-8 and TNPT-160 
-    [Tags]              Test A-System and Function     test  
+    [Tags]              Test A-System and Function     
     [Documentation]     Enter Uboot Mode and Uboot boot Test 
     Enter Uboot Mode then Check Uboot prompt and boot
 
@@ -60,7 +60,7 @@ Case TNPT-408
     GPIO_LED_Test
 
 Case TNPT-402
-    [Tags]              Test A-System and Function   test
+    [Tags]              Test A-System and Function 
     [Documentation]     Bluetooth - Interface UP/DOWN
     BT Init State Check
     BT Interface Down Test
@@ -134,3 +134,14 @@ Case TNPT-100
     [Tags]              Test A-System and Function     
     [Documentation]     I2C bus Scanning
     I2c Bus Scanning Test
+
+Case TNPT-1000        
+    [Tags]              Test A-System and Function    
+    [Documentation]     GPU Performance Test
+    3D Glmark Benchmark Test
+
+Case TNPT-1001     
+    [Tags]              Test A-System and Function    test
+    [Documentation]     Memtester with Fixed memory size
+    Memtester Test 
+    Stressapptest Test 

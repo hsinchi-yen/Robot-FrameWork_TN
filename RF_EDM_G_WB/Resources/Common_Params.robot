@@ -21,6 +21,9 @@ Resource          ../Resources/Eth_Speed_Change.robot
 Resource          ../Resources/Eth_Iperf_test.robot
 Resource          ../Resources/Spi_Device_Test.robot
 Resource          ../Resources/I2c_Bus_Test.robot
+Resource          ../Resources/Display_test.robot
+Resource          ../Resources/Memory_test.robot
+
 *** Variables ***
 # command share variables between DUT and Test PC
 ${TERMINATOR}           root@edm-g-imx8mm:~#

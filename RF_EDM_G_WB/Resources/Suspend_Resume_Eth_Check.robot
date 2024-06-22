@@ -1,4 +1,5 @@
 *** Settings ***
+Library         ../Libraries/EnvVariablesReturnLib.py
 Resource        ../Resources/Common_Params.robot
 
 *** Variables ***
@@ -26,7 +27,10 @@ Wake Up DUT from Sleep
     Log    ${wakenup_msg}
 
 Ethernet Interface Check
-    SerialLibrary.Write Data    ping 10.88.88.1 -c 5${\n}
+    ${DEST_IPv4}=    Ip4_Addr_Finder    ${CONSOLE_ETH_INF}
+    SerialLibrary.Write Data    ping ${DEST_IPv4} -c 5${\n}
     ${ping_msg}=    SerialLibrary.Read Until    ${TERMINATOR}
     Run Keyword And Continue On Failure    Should Not Contain    ${ping_msg}    ${PINGFAIL_WORD}
     Log    ${ping_msg}
+
+    
