@@ -1,6 +1,9 @@
 *** Settings ***
 Library    SerialLibrary    encoding=UTF-8
+Library    SSHLibrary
+
 Library    String
+Library    ../Libraries/EnvVariablesReturnLib.py
 
 
 # add All test operation robots script
@@ -21,24 +24,39 @@ Resource          ../Resources/Eth_Speed_Change.robot
 Resource          ../Resources/Eth_Iperf_test.robot
 Resource          ../Resources/Spi_Device_Test.robot
 Resource          ../Resources/I2c_Bus_Test.robot
+Resource          ../Resources/Audio_Test.robot
+Resource          ../Resources/Storage_RW_Test.robot
+Resource          ../Resources/Wifi_Iperf_test.robot
+Resource          ../Resources/Wifi_Connection_test.robot
 Resource          ../Resources/Display_test.robot
 Resource          ../Resources/Memory_test.robot
-Resource          ../Resources/Wifi_Connection_test.robot
+Resource          ../Resources/Power_Cycle_test.robot
+Resource          ../Resources/Bluetooth_Test.robot
+
 
 *** Variables ***
 # command share variables between DUT and Test PC
-${TERMINATOR}           root@edm-g-imx8mm:~#
-${SERIAL_PORT}          /dev/ttyUSB0
+#Required test parameters in DUT
+${TERMINATOR}           root@edm-g-imx8mp:~#
+${SERIAL_PORT}          /dev/ttyS0
 ${ETH_INF}              eth0
-${LOGIN_PROMPT}         edm-g-imx8mm login:
+${LOGIN_PROMPT}         edm-g-imx8mp login:
 ${LOGIN_ACC}            root
+
+#iw sdio - mlan , qca9377 - wlan
 ${WIFI_INF}             wlan0
 
 #your test pc
-${CONSOLE_ETH_INF}      enp6s0
+${CONSOLE_ETH_INF}      enp5s0
 
 #remote iperf server ip
-${IPERF_SERV}           10.88.88.138
+${IPERF_SERV}           10.88.93.1
+
+
+#power relay IP
+${PWR_SW_IP}    10.88.88.206
+${PWR_USERID}     root  
+
 
 *** Keywords ***
 Open Serial Port
@@ -53,3 +71,25 @@ Open Serial Port
 
 Close Serial Port
     Delete All Ports
+
+SSH Open Connection And Log In          
+   SSHLibrary.Open Connection     ${PWR_SW_IP}
+   SSHLibrary.Login               ${PWR_USERID}        
+
+SSH Close All Connections
+    SSHLibrary.Close Connection
+
+Device ON
+    [Documentation]    Device POWER ON
+    SSHLibrary.Write    ./DOUT_CTRL.sh ON
+    ${read_output}=     SSHLibrary.Read
+    Log to Console      ${read_output}
+    Sleep    0.5
+
+Device OFF
+    [Documentation]    Device POWER OFF
+    SSHLibrary.Write    ./DOUT_CTRL.sh OFF
+    ${read_output}=    SSHLibrary.Read
+    sleep     0.25
+    Log to Console      ${read_output}
+    Sleep    0.5

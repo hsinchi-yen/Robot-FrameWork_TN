@@ -2,7 +2,6 @@
 Resource          ../Resources/Common_Params.robot
 
 *** Variables ***
-${WIFI_INF}             wlan0
 ${WLAN_UP EVENT}        link becomes ready
 
 *** Keywords ***
@@ -14,7 +13,7 @@ WIFI Init State Check
 
 WIFI Interface Down Test
     SerialLibrary.Write Data    ifconfig ${WIFI_INF} down${\n}
-    Sleep    10
+    Sleep    60
     SerialLibrary.Write Data    ifconfig ${WIFI_INF}${\n}
     Sleep    1
     ${wifi_if_log}=    SerialLibrary.Read All Data    UTF-8

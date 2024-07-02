@@ -3,7 +3,7 @@ Library        Collections
 Resource       ../Resources/Common_Params.robot
 
 *** Variables ***
-${GPU_TEST_CMD}      glmark2-es2-wayland
+${GPU_TEST_CMD}      glmark2-es2-wayland --fullscreen --annotate
 
 *** Keywords ***
 3D Glmark Benchmark Test

@@ -36,7 +36,7 @@ ETH Interface UP Test
 
 Ping Test After ETH down
     ${DEST_IPv4}=    Ip4_Addr_Finder    ${CONSOLE_ETH_INF}
-    SerialLibrary.Write Data    ping -c ${PING_TIME} ${DEST_IPv4}${\n}
+    SerialLibrary.Write Data    ping -I ${ETH_INF} -c ${PING_TIME} ${DEST_IPv4}${\n}
     ${Ipv4_pinglog}=    SerialLibrary.Read Until     ${TERMINATOR}   
     Log    ${Ipv4_pinglog}
     Should Contain     ${Ipv4_pinglog}    ${ERR_MESSAGE}
@@ -44,7 +44,7 @@ Ping Test After ETH down
 Ping Test After ETH up
     #obtain IP address in console machine via self-build library EnvVariablesReturnLib.py
     ${DEST_IPv4}=    Ip4_Addr_Finder    ${CONSOLE_ETH_INF}
-    SerialLibrary.Write Data    ping -c ${PING_TIME} ${DEST_IPv4}${\n}
+    SerialLibrary.Write Data    ping -I ${ETH_INF} -c ${PING_TIME} ${DEST_IPv4}${\n}
     ${Ipv4_pinglog}=    SerialLibrary.Read Until     ${TERMINATOR}   
     Log    ${Ipv4_pinglog}
     Should Not Contain     ${Ipv4_pinglog}    ${ERR_MESSAGE}

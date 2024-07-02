@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 6.1.1 (Python 3.10.6 on linux)" generated="20240702 19:18:44.683" rpa="false" schemaversion="4">
+<suite id="s1" name="EDM-G-8MP with EDM-G WB" source="/mnt/HDD_Backup/Automation Project/tn-SIT-RobotFramework_Projects/IMX8MP/EDM_G/EDM_G_WB/Tests/EDM-G-8MP_with_EDM-G_WB.robot">
+<kw name="Run Keywords" library="BuiltIn" type="SETUP">
+<arg>Open Serial Port</arg>
+<arg>AND</arg>
+<arg>SSH Open Connection And Log In</arg>
+<doc>Executes all the given keywords in a sequence.</doc>
+<kw name="Open Serial Port" library="Common_Params">
+<kw name="Add Port" library="SerialLibrary">
+<arg>${SERIAL_PORT}</arg>
+<arg>baudrate=115200</arg>
+<arg>bytesize=8</arg>
+<arg>parity=N</arg>
+<arg>stopbits=1</arg>
+<arg>timeout=60</arg>
+<doc>Adds new port with specified locator.</doc>
+<status status="PASS" starttime="20240702 19:18:44.851" endtime="20240702 19:18:44.852"/>
+</kw>
+<kw name="Reset Input Buffer" library="SerialLibrary">
+<arg>${SERIAL_PORT}</arg>
+<doc>Clears input buffer.</doc>
+<status status="PASS" starttime="20240702 19:18:44.852" endtime="20240702 19:18:44.852"/>
+</kw>
+<kw name="Reset Output Buffer" library="SerialLibrary">
+<arg>${SERIAL_PORT}</arg>
+<doc>Clears outout buffer.</doc>
+<status status="PASS" starttime="20240702 19:18:44.852" endtime="20240702 19:18:44.852"/>
+</kw>
+<status status="PASS" starttime="20240702 19:18:44.851" endtime="20240702 19:18:44.852"/>
+</kw>
+<kw name="SSH Open Connection And Log In" library="Common_Params">
+<kw name="Open Connection" library="SSHLibrary">
+<arg>${PWR_SW_IP}</arg>
+<doc>Opens a new SSH connection to the given ``host`` and ``port``.</doc>
+<status status="PASS" starttime="20240702 19:18:44.853" endtime="20240702 19:18:44.853"/>
+</kw>
+<kw name="Login" library="SSHLibrary">
+<arg>${PWR_USERID}</arg>
+<doc>Logs into the SSH server with the given ``username`` and ``password``.</doc>
+<msg timestamp="20240702 19:18:44.853" level="INFO">Logging into '10.88.88.206:22' as 'root'.</msg>
+<msg timestamp="20240702 19:18:47.858" level="FAIL">TimeoutError: timed out</msg>
+<status status="FAIL" starttime="20240702 19:18:44.853" endtime="20240702 19:18:47.862"/>
+</kw>
+<status status="FAIL" starttime="20240702 19:18:44.852" endtime="20240702 19:18:47.862"/>
+</kw>
+<status status="FAIL" starttime="20240702 19:18:44.851" endtime="20240702 19:18:47.863"/>
+</kw>
+<test id="s1-t1" name="Case TNPT-11" line="32">
+<doc>Giga LAN - Ethernet Interface UP/DOWN</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.863" endtime="20240702 19:18:47.863">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t2" name="Case TNPT-153" line="38">
+<doc>Watch Dog Timer</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.864" endtime="20240702 19:18:47.864">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t3" name="Case TNPT-26" line="44">
+<doc>UART console check</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.864" endtime="20240702 19:18:47.864">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t4" name="Case TNPT-158" line="50">
+<doc>Software reboot</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.865" endtime="20240702 19:18:47.865">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t5" name="Case TNPT-8 and TNPT-160" line="55">
+<doc>Enter Uboot Mode and Uboot boot Test</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.865" endtime="20240702 19:18:47.865">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t6" name="Case TNPT-408" line="60">
+<doc>GPIO-LED - LED5</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.865" endtime="20240702 19:18:47.866">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t7" name="Case TNPT-402" line="65">
+<doc>Bluetooth - Interface UP/DOWN</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.866" endtime="20240702 19:18:47.866">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t8" name="Case TNPT-444" line="72">
+<doc>GPIO - PINS mapping correctness</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.866" endtime="20240702 19:18:47.867">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t9" name="Case TNPT-10" line="77">
+<doc>MAC ID check</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.867" endtime="20240702 19:18:47.867">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t10" name="Case TNPT-24" line="84">
+<doc>Suspend/Resume and check ethernet function</doc>
+<tag>ethcheckwake</tag>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.867" endtime="20240702 19:18:47.867">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t11" name="Case TNPT-12" line="92">
+<doc>Giga LAN - DHCP, ICMP Ping (IPv4)</doc>
+<tag>ping</tag>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.868" endtime="20240702 19:18:47.868">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t12" name="Case TNPT-13" line="97">
+<doc>Giga LAN - DHCP, ICMP Ping (IPv6)</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.868" endtime="20240702 19:18:47.868">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t13" name="Case TNPT-14 and TNPT 31" line="102">
+<doc>Giga LAN - Auto-Negotiation 10/100/1000 Base-T / LED indicators</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.868" endtime="20240702 19:18:47.869">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t14" name="Case TNPT-16" line="109">
+<doc>Giga LAN - TX Ethernet performance (upload)</doc>
+<tag>eth</tag>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.869" endtime="20240702 19:18:47.869">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t15" name="Case TNPT-367" line="114">
+<doc>Giga LAN - RX Ethernet performance (Download)</doc>
+<tag>eth</tag>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.869" endtime="20240702 19:18:47.869">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t16" name="Case TNPT-368" line="119">
+<doc>Giga LAN - TX/RX Ethernet performance (Bi-Direction)</doc>
+<tag>eth</tag>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.870" endtime="20240702 19:18:47.870">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t17" name="Case TNPT-18" line="124">
+<doc>Giga LAN - Wake on LAN</doc>
+<tag>Test A-System and Function</tag>
+<tag>wol</tag>
+<status status="FAIL" starttime="20240702 19:18:47.870" endtime="20240702 19:18:47.870">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t18" name="Case TNPT-142" line="136">
+<doc>SPI Bus Loopback Test</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.870" endtime="20240702 19:18:47.871">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t19" name="Case TNPT-100" line="141">
+<doc>I2C bus Scanning</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.871" endtime="20240702 19:18:47.871">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t20" name="Case TNPT-34" line="146">
+<doc>Audio Jack
+Share the same test case TN35, use the headphone set for test</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.871" endtime="20240702 19:18:47.871">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t21" name="Case TNPT-35" line="152">
+<doc>Speaker headers
+Share the same test case TNPT34, use the speaker for test</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.872" endtime="20240702 19:18:47.872">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t22" name="Case TNPT-68" line="159">
+<doc>HDMI-audio</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.872" endtime="20240702 19:18:47.872">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t23" name="Case TNPT-33 and TNPT-32" line="164">
+<doc>USB2.0/3.0 Host 1/2 , USB Type-C OTG-Peripherial</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.873" endtime="20240702 19:18:47.873">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t24" name="Case TNPT-432" line="169">
+<doc>On Board SDCARD Function Test</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.873" endtime="20240702 19:18:47.873">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t25" name="Case TNPT-129" line="174">
+<doc>Disk Benchmark (eMMC)</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.874" endtime="20240702 19:18:47.874">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t26" name="Case TNPT-136" line="179">
+<doc>Reset 20 times by Reset button
+Use the reboot command instaed.</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.874" endtime="20240702 19:18:47.874">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t27" name="Case TNPT-85" line="185">
+<doc>M.2 PCIE Storage
+Key B+M Nvme Storage is required</doc>
+<tag>nvme</tag>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.875" endtime="20240702 19:18:47.875">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t28" name="Case TNPT-42" line="192">
+<doc>Wifi Connectiviy - 11ac (5G BW 20/40/80Mhz) and Channel Test</doc>
+<tag>Test A-System and Function</tag>
+<tag>wifitest</tag>
+<status status="FAIL" starttime="20240702 19:18:47.875" endtime="20240702 19:18:47.875">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t29" name="Case TNPT-48" line="197">
+<doc>WIFI Connection and Performance (TX)</doc>
+<tag>Test A-System and Function</tag>
+<tag>wifitest</tag>
+<status status="FAIL" starttime="20240702 19:18:47.876" endtime="20240702 19:18:47.876">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t30" name="Case TNPT-369" line="202">
+<doc>WIFI Connection and Performance (RX)</doc>
+<tag>Test A-System and Function</tag>
+<tag>wifitest</tag>
+<status status="FAIL" starttime="20240702 19:18:47.876" endtime="20240702 19:18:47.876">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t31" name="Case TNPT-370" line="207">
+<doc>WIFI Connection and Performance (Bi-Direction)</doc>
+<tag>Test A-System and Function</tag>
+<tag>wifitest</tag>
+<status status="FAIL" starttime="20240702 19:18:47.877" endtime="20240702 19:18:47.877">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t32" name="Case TNPT-401" line="212">
+<doc>WLAN - Interface UP/DOWN</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.877" endtime="20240702 19:18:47.877">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t33" name="Case TNPT-50" line="219">
+<doc>WIFI PM suspend/resume test</doc>
+<tag>Test A-System and Function</tag>
+<tag>wifipm</tag>
+<status status="FAIL" starttime="20240702 19:18:47.878" endtime="20240702 19:18:47.878">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t34" name="Case TNPT-130" line="227">
+<doc>GPU Benchmark(list GPU Library version)</doc>
+<tag>mem</tag>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.878" endtime="20240702 19:18:47.878">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t35" name="Case TNPT-774" line="232">
+<doc>Memory Test - memtester - fixed mem size</doc>
+<tag>mem</tag>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.878" endtime="20240702 19:18:47.879">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t36" name="Case TNPT-172" line="237">
+<doc>Memory stress Test - stressapptest</doc>
+<tag>mem</tag>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.879" endtime="20240702 19:18:47.879">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t37" name="Case TNPT-25" line="242">
+<doc>System Boot Time Test</doc>
+<tag>pwr</tag>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.879" endtime="20240702 19:18:47.879">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t38" name="Case TNPT-63" line="247">
+<doc>Bluetooth A2DP Source/Sink</doc>
+<tag>bluetooth</tag>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.880" endtime="20240702 19:18:47.880">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t39" name="Case TNPT-159" line="255">
+<doc>Software Shutdown</doc>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.880" endtime="20240702 19:18:47.880">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<test id="s1-t40" name="Case TNPT-146" line="266">
+<doc>System Cold Boot (Power Cycle) - 20 times</doc>
+<tag>restart</tag>
+<tag>Test A-System and Function</tag>
+<status status="FAIL" starttime="20240702 19:18:47.881" endtime="20240702 19:18:47.881">Parent suite setup failed:
+TimeoutError: timed out</status>
+</test>
+<kw name="Run Keywords" library="BuiltIn" type="TEARDOWN">
+<arg>Close Serial Port</arg>
+<arg>AND</arg>
+<arg>SSH Close All Connections</arg>
+<doc>Executes all the given keywords in a sequence.</doc>
+<kw name="Close Serial Port" library="Common_Params">
+<kw name="Delete All Ports" library="SerialLibrary">
+<doc>Deletes all ports maintained in the library instance.</doc>
+<status status="PASS" starttime="20240702 19:18:47.882" endtime="20240702 19:18:47.882"/>
+</kw>
+<status status="PASS" starttime="20240702 19:18:47.882" endtime="20240702 19:18:47.882"/>
+</kw>
+<kw name="SSH Close All Connections" library="Common_Params">
+<kw name="Close Connection" library="SSHLibrary">
+<doc>Closes the current connection.</doc>
+<status status="PASS" starttime="20240702 19:18:47.883" endtime="20240702 19:18:47.883"/>
+</kw>
+<status status="PASS" starttime="20240702 19:18:47.882" endtime="20240702 19:18:47.883"/>
+</kw>
+<status status="PASS" starttime="20240702 19:18:47.882" endtime="20240702 19:18:47.883"/>
+</kw>
+<status status="FAIL" starttime="20240702 19:18:44.684" endtime="20240702 19:18:47.883">Suite setup failed:
+TimeoutError: timed out</status>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="40" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="0" fail="1" skip="0">bluetooth</stat>
+<stat pass="0" fail="3" skip="0">eth</stat>
+<stat pass="0" fail="1" skip="0">ethcheckwake</stat>
+<stat pass="0" fail="3" skip="0">mem</stat>
+<stat pass="0" fail="1" skip="0">nvme</stat>
+<stat pass="0" fail="1" skip="0">ping</stat>
+<stat pass="0" fail="1" skip="0">pwr</stat>
+<stat pass="0" fail="1" skip="0">restart</stat>
+<stat pass="0" fail="40" skip="0">Test A-System and Function</stat>
+<stat pass="0" fail="1" skip="0">wifipm</stat>
+<stat pass="0" fail="4" skip="0">wifitest</stat>
+<stat pass="0" fail="1" skip="0">wol</stat>
+</tag>
+<suite>
+<stat pass="0" fail="40" skip="0" id="s1" name="EDM-G-8MP with EDM-G WB">EDM-G-8MP with EDM-G WB</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

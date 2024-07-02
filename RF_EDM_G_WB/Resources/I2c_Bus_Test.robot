@@ -6,7 +6,9 @@ Resource        ../Resources/Common_Params.robot
 
 
 *** Variables ***
-#
+#EEPROM address on TN134 PI-TEST board 
+${Desired_Pattern}=        50: 50 51 52 53
+
 *** Keywords ***
 I2c Bus Scanning Test
     SerialLibrary.Write Data    i2cdetect -l${\n}
@@ -17,11 +19,16 @@ I2c Bus Scanning Test
 
     FOR    ${i2c_id}    IN    @{i2cs}
         Seriallibrary.Write Data    i2cdetect -y -r ${i2c_id}${\n}
-        Sleep    0.5
+        Sleep    1
+        ${i2c_dump_log}=    Seriallibrary.Read All Data    UTF-8
+        Log    ${i2c_dump_log}
+        ${scan_state}=    Run Keyword And Return Status    Should Contain    ${i2c_dump_log}    ${Desired_Pattern}
+        #Log To Console    Scan_state:${scan_state}
+        Exit For Loop If    ${scan_state} == ${True}
+        Continue For Loop If    ${scan_state} == ${False}
     END
-    Sleep    1
-    ${i2c_dump_log}=    Seriallibrary.Read All Data    UTF-8
-    Log    ${i2c_dump_log}
+    #Log To Console    ext:Scan_state:${scan_state}
+    Should Be True    ${scan_state} == ${True}
 
 Get I2c buses
     [Arguments]    ${i2clist_log}

@@ -2,7 +2,6 @@ import sys
 import time
 import subprocess
 
-
 def find_ipv4_addr(loc_inf):
     command = f"ifconfig {loc_inf} | grep 'inet\ ' | awk -F ' ' '{{print $2}}'"
     try:
@@ -12,7 +11,7 @@ def find_ipv4_addr(loc_inf):
         return result.stdout.strip()        
        
     except Exception as e:
-        print(f"Error executing lsusb: {e}")
+        print(f"Error executing ifconfig: {e}")
         return f"Command failed with error: {e.stderr}"
     
 
@@ -25,7 +24,19 @@ def find_ipv6_addr(loc_inf):
         return result.stdout.strip()     
         
     except Exception as e:
-        print(f"Error executing lsusb: {e}")
+        print(f"Error executing ifconfig: {e}")
+        return f"Command failed with error: {e.stderr}"
+
+def send_magic_packet(loc_inf, dut_mac):
+    command = f"sudo etherwake -i {loc_inf} {dut_mac}"
+    try:
+        result = subprocess.run(command, shell=True, check=True, text=True, capture_output=True)
+        output = result.stdout
+        print(f"Console INF:{loc_inf} Send Magic Packet:{output}")
+        return result.stdout.strip()     
+        
+    except Exception as e:
+        print(f"Error executing etherwake: {e}")
         return f"Command failed with error: {e.stderr}"
     
 
@@ -39,4 +50,5 @@ class EnvVariablesReturnLib:
     def ip6_addr_finder(self, desired_ethinf):
         return find_ipv6_addr(desired_ethinf)
 
-
+    def send_magic_packet(self, desired_ethinf, dut_mac):
+        return send_magic_packet(desired_ethinf, dut_mac)

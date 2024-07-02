@@ -1,7 +1,7 @@
 *** Settings ***
 Library        Collections
 Resource       ../Resources/Common_Params.robot
-Library        ../Libraries/EnvVariablesReturnLib.py
+
 
 *** Variables ***
 #${DEST_IPv4}        10.88.88.144

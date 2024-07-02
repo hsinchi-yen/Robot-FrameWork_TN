@@ -3,68 +3,73 @@ Library        Collections
 Resource       ../Resources/Common_Params.robot
 Library        ../Libraries/EnvVariablesReturnLib.py
 
+
 *** Variables ***
 ${P_STREAMS}         4
+
 ${TEST_SECONDS}      20
 # unit - Mbits/sec
-${1G_RATE_SPEC}      900
-${100M_RATE_SPEC}    98
-${10M_RATE_SPEC}     8
+${TX_RATE_SPEC}      80
+${RX_RATE_SPEC}      100
+
+${BIDIR_TX_RATE_SPEC}     30
+${BIDIR_RX RATE_SPEC}     70
 
 ${CRITERION_UNIT}    Mbits/sec
 
 *** Keywords ***
-ETH Iperf3 Tx Test
-    Wifi Ip Address Checker
-    ${eth_ip}=    Get Eth Ip Address
-    SerialLibrary.Write Data    iperf3 -c ${IPERF_SERV} -B ${eth_ip} -P ${P_STREAMS} -t ${TEST_SECONDS}${\n}
+Wifi Iperf3 Tx Test
+    Eth Ip Address Checker
+    ${wifi_ip}=    Get Wifi Ip Address
+    SerialLibrary.Write Data    iperf3 -c ${IPERF_SERV} -B ${wifi_ip} -P ${P_STREAMS} -t ${TEST_SECONDS}${\n}
     ${Iperf3_log}=    SerialLibrary.Read Until    ${TERMINATOR}
     Log    ${Iperf3_log}
-    Transmission Bitrate Check     ${Iperf3_log}
-    Wifi Ip Address Resume
+    Wifi Transmission Bitrate Check    ${Iperf3_log}    ${TX_RATE_SPEC}
+    Eth Ip Address Resume
 
-ETH Iperf3 Rx Test
-    Wifi Ip Address Checker
-    ${eth_ip}=    Get Eth Ip Address
-    SerialLibrary.Write Data    iperf3 -c ${IPERF_SERV} -B ${eth_ip} -P ${P_STREAMS} -t ${TEST_SECONDS} -R${\n}
+
+Wifi Iperf3 Rx Test
+    Eth Ip Address Checker
+    ${wifi_ip}=    Get Wifi Ip Address
+    SerialLibrary.Write Data    iperf3 -c ${IPERF_SERV} -B ${wifi_ip} -P ${P_STREAMS} -t ${TEST_SECONDS} -R${\n}
     ${Iperf3_log}=    SerialLibrary.Read Until    ${TERMINATOR}
     Log    ${Iperf3_log}
-    Transmission Bitrate Check     ${Iperf3_log}
-    Wifi Ip Address Resume
+    Wifi Transmission Bitrate Check    ${Iperf3_log}    ${RX_RATE_SPEC}
+    Eth Ip Address Resume
 
-ETH Iperf3 Bidirection Test
-    Wifi Ip Address Checker
-    ${eth_ip}=    Get Eth Ip Address
-    SerialLibrary.Write Data    iperf3 -c ${IPERF_SERV} -B ${eth_ip} -P ${P_STREAMS} -t ${TEST_SECONDS} --bidir${\n}
+Wifi Iperf3 Bidirection Test
+    Eth Ip Address Checker
+    ${wifi_ip}=    Get Wifi Ip Address
+    SerialLibrary.Write Data    iperf3 -c ${IPERF_SERV} -B ${wifi_ip} -P ${P_STREAMS} -t ${TEST_SECONDS} --bidir${\n}
     ${Iperf3_log}=    SerialLibrary.Read Until    ${TERMINATOR}
     Log    ${Iperf3_log}
-    Bidir Transmission Bitrate Check     ${Iperf3_log}
-    Wifi Ip Address Resume
+    Wifi Bidir Transmission Bitrate Check     ${Iperf3_log}
+    Eth Ip Address Resume
 
-Get Eth Ip Address
-    SerialLibrary.Write Data    ifconfig ${ETH_INF}${\n}
+Get Wifi Ip Address
+    SerialLibrary.Write Data    ifconfig ${WIFI_INF}${\n}
     Sleep    1
-    ${eth_chk_log}=        SerialLibrary.Read All Data    UTF-8
-    ${eth_ip_match}=       Get Regexp Matches    ${eth_chk_log}    inet 10\.88\.88\.\\d+
-    ${eth_ip_string}=      Strip String    @{eth_ip_match}    characters=inet${SPACE}
-    RETURN   ${eth_ip_string}
+    ${wifi_chk_log}=        SerialLibrary.Read All Data    UTF-8
+    ${wifi_ip_match}=       Get Regexp Matches    ${wifi_chk_log}    inet 10\.88\.88\.\\d+
+    ${wifi_ip_string}=      Strip String    @{wifi_ip_match}    characters=inet${SPACE}
+    RETURN   ${wifi_ip_string}
 
-Wifi Ip Address Checker
-    SerialLibrary.Write Data    connmanctl disable wifi${\n}
+Eth Ip Address Checker
+    SerialLibrary.Write Data    connmanctl disable ethernet${\n}
     Sleep    0.5
-    SerialLibrary.Write Data    connmanctl enable ethernet${\n}
-    Sleep    5
-    ${wifi_chk_log}=        SerialLibrary.Read All Data    UTF-8
-    Log    ${wifi_chk_log}
-
-Wifi Ip Address Resume
     SerialLibrary.Write Data    connmanctl enable wifi${\n}
-    Sleep    10
-    ${wifi_chk_log}=        SerialLibrary.Read All Data    UTF-8
-    Log    ${wifi_chk_log}
+    Sleep    5
+    ${eth_chk_log}=        SerialLibrary.Read All Data    UTF-8
+    Log    ${eth_chk_log}
 
-Transmission Bitrate Check
-    [Arguments]    ${iperf_output}    
+Eth Ip Address Resume
+    SerialLibrary.Write Data    connmanctl enable ethernet${\n}
+    Sleep    10
+    ${eth_up_log}=        SerialLibrary.Read All Data    UTF-8
+    Log    ${eth_up_log}
+
+Wifi Transmission Bitrate Check
+    [Arguments]    ${iperf_output}   ${test_spec}
     @{lines}=    Split To Lines    ${iperf_output}
     ${sender_line}=      Get From List    ${lines}    -5
     ${receiver_line}=    Get From List    ${lines}    -4
@@ -81,16 +86,16 @@ Transmission Bitrate Check
     ${sender_digi}=        Get Regexp Matches     ${sender_rate}          \\d+[.\\d+]*
     ${receiver_digi}=      Get Regexp Matches     ${receiver_rate}        \\d+[.\\d+]*
 
-    ${sender_digi}=        Convert To Integer    @{sender_digi}
-    ${receiver_digi}=      Convert To Integer    @{receiver_digi}
+    ${sender_digi}=        Convert To Number   @{sender_digi}
+    ${receiver_digi}=      Convert To Number    @{receiver_digi}
 
     Log    sender_digi:${sender_digi} ${CRITERION_UNIT} 
     Log    receiver_digi:${receiver_digi} ${CRITERION_UNIT} 
 
-    Should Be True        ${sender_digi} > ${1G_RATE_SPEC}
-    Should Be True        ${receiver_digi} > ${1G_RATE_SPEC}
+    Should Be True        ${sender_digi} >= ${test_spec}
+    Should Be True        ${receiver_digi} >= ${test_spec}
 
-Bidir Transmission Bitrate Check 
+Wifi Bidir Transmission Bitrate Check 
     [Arguments]    ${iperf_output}    
     @{lines}=    Split To Lines    ${iperf_output}
     ${tx_sender_line}=      Get From List    ${lines}    -15
@@ -120,21 +125,23 @@ Bidir Transmission Bitrate Check
     ${rx_receiver_digi}=      Get Regexp Matches     ${rx_receiver_rate}        \\d+[.\\d+]*
 
 
-    ${tx_sender_digi}=        Convert To Integer    @{tx_sender_digi}
-    ${tx_receiver_digi}=      Convert To Integer    @{tx_receiver_digi}
-    ${rx_sender_digi}=        Convert To Integer    @{rx_sender_digi}
-    ${rx_receiver_digi}=      Convert To Integer    @{rx_receiver_digi}
+    ${tx_sender_digi}=        Convert To Number    @{tx_sender_digi}
+    ${tx_receiver_digi}=      Convert To Number    @{tx_receiver_digi}
+    ${rx_sender_digi}=        Convert To Number    @{rx_sender_digi}
+    ${rx_receiver_digi}=      Convert To Number    @{rx_receiver_digi}
 
     Log    tx_sender_digi:${tx_sender_digi} ${CRITERION_UNIT} 
     Log    tx_receiver_digi:${tx_receiver_digi} ${CRITERION_UNIT} 
     Log    rx_sender_digi:${rx_sender_digi} ${CRITERION_UNIT} 
     Log    rx_receiver_digi:${rx_receiver_digi} ${CRITERION_UNIT} 
 
-    Should Be True        ${tx_sender_digi} > ${1G_RATE_SPEC}
-    Should Be True        ${tx_receiver_digi} > ${1G_RATE_SPEC}
-    Should Be True        ${rx_sender_digi} > ${1G_RATE_SPEC}
-    Should Be True        ${rx_receiver_digi} > ${1G_RATE_SPEC}
 
+    #${result_tx_sender_digi_ge}    Evaluate    ${tx_sender_digi} >= ${BIDIR_TX_RATE_SPEC}
+    #${result+tx_receiver_digi_ge}    Evaluate    ${tx_receiver_digi} >= ${BIDIR_TX_RATE_SPEC}
+    #${rx_sender_digi_ge}    Evaluate    ${rx_sender_digi} >= ${BIDIR_RX RATE_SPEC} 
+    #${rx_receiver_digi_ge}    Evaluate    ${rx_receiver_digi} >= ${BIDIR_RX RATE_SPEC} 
 
-
-
+    Should Be True        ${tx_sender_digi} >= ${BIDIR_TX_RATE_SPEC}
+    Should Be True        ${tx_receiver_digi} >= ${BIDIR_TX_RATE_SPEC}
+    Should Be True        ${rx_sender_digi} >= ${BIDIR_RX RATE_SPEC} 
+    Should Be True        ${rx_receiver_digi} >= ${BIDIR_RX RATE_SPEC} 
