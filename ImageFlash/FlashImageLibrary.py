@@ -122,7 +122,7 @@ class FlashImageLibrary:
         print("Send UMS command line")
         time.sleep(7)
 
-    def check_usb_device_connected(self, desired_string="NXP Semiconductors USB download gadget"):
+    def check_usb_device_connected(self, desired_string="Netchip"):
         return check_usb_device(desired_string)
 
     def find_ums_device(self):

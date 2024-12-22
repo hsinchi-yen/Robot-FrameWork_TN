@@ -1,12 +1,12 @@
 *** Settings ***
-Library    FlashImageLibrary.py
+Library   ./FlashImageLibrary.py
 
 *** Variables ***
-${TEST_IMAGE}    ../edm-g-imx8mp_edm-g-wb_yocto-4.0-qt6_qca9377_hdmi-1920x1080_20240220.wic 
+${TEST_IMAGE}    ./edm-g-imx8mm_edm-g-wb_yocto-4.0-qt6_qca9377-iw416_lvds-1280x800_20241206.wic 
 
 *** Test Cases ***
 Perform Flash
-    Connect Serial    /dev/ttyS0
+    Connect Serial    /dev/ttyUSB0
     Send Reboot Command
     ${autobootlog}=    Wait For Boot Message    Normal Boot
     Run Keyword If    '${autobootlog}' == 'True'    Send UMS Command
