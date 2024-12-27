@@ -81,8 +81,16 @@ def UMS_finder():
     except subprocess.CalledProcessError as e:
         return f"Command failed with error: {e.stderr}"
 
-def flash_image(image, device):
+def flash_image_dd(image, device):
     command = f"sudo dd if={image} of={device} bs=1M oflag=dsync status=progress"
+    try:
+        result = subprocess.run(command, shell=True, check=True, text=True, capture_output=True)
+        return result.stdout
+    except subprocess.CalledProcessError as e:
+        return f"Command failed with error: {e.stderr}"
+    
+def flash_image_bmaptool(image, device):
+    command = f"sudo bmaptool copy --bmap {image}.bmap {image} {device}"
     try:
         result = subprocess.run(command, shell=True, check=True, text=True, capture_output=True)
         return result.stdout
@@ -129,4 +137,4 @@ class FlashImageLibrary:
         return UMS_finder()
 
     def flash_image_to_device(self, image, device):
-        return flash_image(image, device)
+        return flash_image_dd(image, device)

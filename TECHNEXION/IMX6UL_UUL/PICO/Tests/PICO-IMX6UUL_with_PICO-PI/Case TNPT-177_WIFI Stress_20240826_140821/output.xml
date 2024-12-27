@@ -1,0 +1,821 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.0.1 (Python 3.10.12 on linux)" generated="2024-08-26T14:08:21.725424" rpa="false" schemaversion="5">
+<suite id="s1" name="PICO-IMX6UUL with PICO-PI" source="/home/raymond/Documents/Robot/IMX6UL/PICO-IMX6UUL/PICO-PI/Tests/PICO-IMX6UUL_with_PICO-PI.robot">
+<kw name="Run Keywords" owner="BuiltIn" type="SETUP">
+<kw name="Open Serial Port" owner="Common_Params">
+<kw name="Add Port" owner="SerialLibrary">
+<arg>${SERIAL_PORT}</arg>
+<arg>baudrate=115200</arg>
+<arg>bytesize=8</arg>
+<arg>parity=N</arg>
+<arg>stopbits=1</arg>
+<arg>timeout=60</arg>
+<doc>Adds new port with specified locator.</doc>
+<status status="PASS" start="2024-08-26T14:08:21.978174" elapsed="0.994571"/>
+</kw>
+<kw name="Reset Input Buffer" owner="SerialLibrary">
+<arg>${SERIAL_PORT}</arg>
+<doc>Clears input buffer.</doc>
+<status status="PASS" start="2024-08-26T14:08:22.973295" elapsed="0.000619"/>
+</kw>
+<kw name="Reset Output Buffer" owner="SerialLibrary">
+<arg>${SERIAL_PORT}</arg>
+<doc>Clears outout buffer.</doc>
+<status status="PASS" start="2024-08-26T14:08:22.974282" elapsed="0.000420"/>
+</kw>
+<status status="PASS" start="2024-08-26T14:08:21.977790" elapsed="0.997045"/>
+</kw>
+<kw name="SSH Open Connection And Log In" owner="Common_Params">
+<kw name="Open Connection" owner="SSHLibrary">
+<arg>${PWR_SW_IP}</arg>
+<doc>Opens a new SSH connection to the given ``host`` and ``port``.</doc>
+<status status="PASS" start="2024-08-26T14:08:22.975526" elapsed="0.000472"/>
+</kw>
+<kw name="Login" owner="SSHLibrary">
+<msg time="2024-08-26T14:08:22.976909" level="INFO">Logging into '10.88.88.214:22' as 'root'.</msg>
+<msg time="2024-08-26T14:08:24.122502" level="INFO">Read output: root@pico-imx8mm:~#</msg>
+<arg>${PWR_USERID}</arg>
+<doc>Logs into the SSH server with the given ``username`` and ``password``.</doc>
+<status status="PASS" start="2024-08-26T14:08:22.976401" elapsed="1.146269"/>
+</kw>
+<status status="PASS" start="2024-08-26T14:08:22.975160" elapsed="1.147622"/>
+</kw>
+<arg>Open Serial Port</arg>
+<arg>AND</arg>
+<arg>SSH Open Connection And Log In</arg>
+<doc>Executes all the given keywords in a sequence.</doc>
+<status status="PASS" start="2024-08-26T14:08:21.977397" elapsed="2.145427"/>
+</kw>
+<test id="s1-t1" name="Case TNPT-177" line="33">
+<kw name="Initial Check and Setup server" owner="WIFI_Stress_12H">
+<kw name="Wifi Connection test" owner="Wifi_Connection_test">
+<kw name="Get Wifi Connention hashkey" owner="Wifi_Connection_test">
+<kw name="Get Wifi Device Mac Id" owner="Wifi_Connection_test">
+<kw name="Write Data" owner="SerialLibrary">
+<arg>ifconfig ${WIFI_INF}${\n}</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2024-08-26T14:08:24.124511" elapsed="0.000197"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2024-08-26T14:08:25.126119" level="INFO">Slept 1 second.</msg>
+<arg>1</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2024-08-26T14:08:24.124851" elapsed="1.001691"/>
+</kw>
+<kw name="Read All Data" owner="SerialLibrary">
+<msg time="2024-08-26T14:08:25.128814" level="INFO">${wifiinf_log} = 
+ifconfig wlan0
+wlan0: flags=-28605&lt;UP,BROADCAST,RUNNING,MULTICAST,DYNAMIC&gt;  mtu 1500
+        inet 10.88.88.250  netmask 255.255.248.0  broadcast 10.88.95.255
+        inet6 fe80::21f:7bff:fe31:d92...</msg>
+<var>${wifiinf_log}</var>
+<arg>UTF-8</arg>
+<doc>Read all available data from the port's incoming buffer.</doc>
+<status status="PASS" start="2024-08-26T14:08:25.127573" elapsed="0.001392"/>
+</kw>
+<kw name="Get Regexp Matches" owner="String">
+<msg time="2024-08-26T14:08:25.131485" level="INFO">${wifi_mac} = ['00:1f:7b:31:d9:24']</msg>
+<var>${wifi_mac}</var>
+<arg>${wifiinf_log}</arg>
+<arg>\\w{2}:\\w{2}:\\w{2}:\\w{2}:\\w{2}:\\w{2}</arg>
+<doc>Returns a list of all non-overlapping matches in the given string.</doc>
+<status status="PASS" start="2024-08-26T14:08:25.130024" elapsed="0.001614"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2024-08-26T14:08:25.132737" level="INFO">['00:1f:7b:31:d9:24']</msg>
+<arg>${wifi_mac}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2024-08-26T14:08:25.132261" elapsed="0.001188"/>
+</kw>
+<kw name="Remove String" owner="String">
+<msg time="2024-08-26T14:08:25.135335" level="INFO">${wifi_mac_stripped} = 001f7b31d924</msg>
+<var>${wifi_mac_stripped}</var>
+<arg>@{wifi_mac}</arg>
+<arg>:</arg>
+<doc>Removes all ``removables`` from the given ``string``.</doc>
+<status status="PASS" start="2024-08-26T14:08:25.134477" elapsed="0.000958"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2024-08-26T14:08:25.136375" level="INFO">001f7b31d924</msg>
+<arg>${wifi_mac_stripped}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2024-08-26T14:08:25.136089" elapsed="0.000366"/>
+</kw>
+<return>
+<value>${wifi_mac_stripped}</value>
+<status status="PASS" start="2024-08-26T14:08:25.136595" elapsed="0.000263"/>
+</return>
+<msg time="2024-08-26T14:08:25.137391" level="INFO">${trim_wifi_mac} = 001f7b31d924</msg>
+<var>${trim_wifi_mac}</var>
+<status status="PASS" start="2024-08-26T14:08:24.124291" elapsed="1.013179"/>
+</kw>
+<kw name="Write Data" owner="SerialLibrary">
+<arg>connmanctl enable wifi${\n}</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2024-08-26T14:08:25.138050" elapsed="0.000261"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2024-08-26T14:08:25.638768" level="INFO">Slept 500 milliseconds.</msg>
+<arg>0.5</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2024-08-26T14:08:25.138438" elapsed="0.500459"/>
+</kw>
+<kw name="Write Data" owner="SerialLibrary">
+<arg>connmanctl scan wifi${\n}</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2024-08-26T14:08:25.639178" elapsed="0.000264"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2024-08-26T14:08:35.639889" level="INFO">Slept 10 seconds.</msg>
+<arg>10</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2024-08-26T14:08:25.639624" elapsed="10.000420"/>
+</kw>
+<kw name="Read All Data" owner="SerialLibrary">
+<msg time="2024-08-26T14:08:35.640578" level="INFO">${connman_log} = connmanctl enable wifi
+wifi is already enabled
+root@pico-imx6ul:/opt/thermal-imx-test# connmanctl scan wifi
+Scan completed for wifi
+root@pico-imx6ul:/opt/thermal-imx-test# </msg>
+<var>${connman_log}</var>
+<arg>UTF-8</arg>
+<doc>Read all available data from the port's incoming buffer.</doc>
+<status status="PASS" start="2024-08-26T14:08:35.640312" elapsed="0.000289"/>
+</kw>
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${connman_log}</arg>
+<arg>Scan completed for wifi</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2024-08-26T14:08:35.640816" elapsed="0.000146"/>
+</kw>
+<kw name="Write Data" owner="SerialLibrary">
+<arg>connmanctl services${\n}</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2024-08-26T14:08:35.641104" elapsed="0.000134"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2024-08-26T14:08:40.642334" level="INFO">Slept 5 seconds.</msg>
+<arg>5</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2024-08-26T14:08:35.641450" elapsed="5.001308"/>
+</kw>
+<kw name="Read All Data" owner="SerialLibrary">
+<msg time="2024-08-26T14:08:40.645557" level="INFO">${service_log} = connmanctl services
+*AR TECHNEXION-RDTEST-5G wifi_001f7b31d924_544543484e4558494f4e2d5244544553542d3547_managed_psk
+    Synology_520HMX_5G   wifi_001f7b31d924_53796e6f6c6f67795f353230484d585f3547_ma...</msg>
+<var>${service_log}</var>
+<arg>UTF-8</arg>
+<doc>Read all available data from the port's incoming buffer.</doc>
+<status status="PASS" start="2024-08-26T14:08:40.643706" elapsed="0.001983"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2024-08-26T14:08:40.647460" level="INFO">connmanctl services
+*AR TECHNEXION-RDTEST-5G wifi_001f7b31d924_544543484e4558494f4e2d5244544553542d3547_managed_psk
+    Synology_520HMX_5G   wifi_001f7b31d924_53796e6f6c6f67795f353230484d585f3547_managed_none
+                         wifi_001f7b31d924_hidden_managed_psk
+    Synology_520HMX_2.4G wifi_001f7b31d924_53796e6f6c6f67795f353230484d585f322e3447_managed_none
+    Xada2021_ac          wifi_001f7b31d924_58616461323032315f6163_managed_psk
+    XadaGuest2021        wifi_001f7b31d924_58616461477565737432303231_managed_psk
+    TECHNEXION           wifi_001f7b31d924_544543484e4558494f4e_managed_psk
+    guest_backhaul       wifi_001f7b31d924_67756573745f6261636b6861756c_managed_psk
+    TECHNEXION-GUEST     wifi_001f7b31d924_544543484e4558494f4e2d4755455354_managed_psk
+    TECHNEXION-RDTEST-5G-WIFI6-WPA3 wifi_001f7b31d924_544543484e4558494f4e2d5244544553542d35472d57494649362d57504133_managed_psk
+    PD-QC-5              wifi_001f7b31d924_50442d51432d35_managed_psk
+    codymaomaopet        wifi_001f7b31d924_636f64796d616f6d616f706574_managed_psk
+                         wifi_001f7b31d924_hidden_managed_none
+    PD-QC-2-4            wifi_001f7b31d924_50442d51432d322d34_managed_psk
+    SIT_RD_Chamber_WiFi  wifi_001f7b31d924_5349545f52445f4368616d6265725f57694669_managed_psk
+    TECHNEXION-RDTEST    wifi_001f7b31d924_544543484e4558494f4e2d524454455354_managed_psk
+    SIT_RD_Chamber_WiFi_WPA3 wifi_001f7b31d924_5349545f52445f4368616d6265725f576946695f57504133_managed_psk
+    WT-WAP(Airport-2.4G) wifi_001f7b31d924_57542d57415028416972706f72742d322e344729_managed_ieee8021x
+    MiDeskLamp1S-102F-1F102F wifi_001f7b31d924_4d694465736b4c616d7031532d313032462d314631303246_managed_none
+    Project1_5G-1        wifi_001f7b31d924_50726f6a656374315f35472d31_managed_psk
+    XADA-DEB004-SETUP    wifi_001f7b31d924_584144412d4445423030342d5345545550_managed_psk
+    LIN_HOME             wifi_001f7b31d924_4c494e5f484f4d45_managed_psk
+    @UJ                  wifi_001f7b31d924_40554a_managed_ieee8021x
+    4GEE_Router_2928_5GHz wifi_001f7b31d924_344745455f526f757465725f323932385f3547487a_managed_psk
+    @UJ2                 wifi_001f7b31d924_40554a32_managed_ieee8021x
+    B715-5G-E6FD         wifi_001f7b31d924_423731352d35472d45364644_managed_psk
+    Deco M4 - 2.4G       wifi_001f7b31d924_4465636f204d34202d20322e3447_managed_psk
+    deepthought          wifi_001f7b31d924_6465657074686f75676874_managed_psk
+    gamabyod             wifi_001f7b31d924_67616d6162796f64_managed_none
+    C&amp;T Guest_5G         wifi_001f7b31d924_4326542047756573745f3547_managed_psk
+    EVAN3_5G             wifi_001f7b31d924_4556414e335f3547_managed_psk
+    KEIGA                wifi_001f7b31d924_4b45494741_managed_psk
+    QuickBuy             wifi_001f7b31d924_517569636b427579_managed_psk
+    herbwifi             wifi_001f7b31d924_6865726277696669_managed_psk
+    ASUS_5G              wifi_001f7b31d924_415355535f3547_managed_psk
+    EVAN2-5G             wifi_001f7b31d924_4556414e322d3547_managed_psk
+    SIGNAL               wifi_001f7b31d924_5349474e414c_managed_psk
+    cbf                  wifi_001f7b31d924_636266_managed_psk
+    dlink5               wifi_001f7b31d924_646c696e6b35_managed_psk
+    sekidai              wifi_001f7b31d924_73656b69646169_managed_psk
+    Whiter_5GGG          wifi_001f7b31d924_5768697465725f35474747_managed_psk
+    cbt                  wifi_001f7b31d924_636274_managed_psk
+    xroundaudio          wifi_001f7b31d924_78726f756e64617564696f_managed_psk
+    Meicheng_5G          wifi_001f7b31d924_4d65696368656e675f3547_managed_psk
+    ATPUB                wifi_001f7b31d924_4154505542_managed_psk
+    BIA_5G               wifi_001f7b31d924_4249415f3547_managed_psk
+    DIRECT-1d-HP M283 LaserJet wifi_001f7b31d924_4449524543542d31642d4850204d323833204c617365724a6574_managed_psk
+    ccc5g                wifi_001f7b31d924_6363633567_managed_psk
+    ATAP.1X              wifi_001f7b31d924_415441502e3158_managed_ieee8021x
+    AskeyAOC_17F         wifi_001f7b31d924_41736b6579414f435f313746_managed_psk
+    POWERMETA</msg>
+<arg>${service_log}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2024-08-26T14:08:40.646692" elapsed="0.001500"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2024-08-26T14:08:40.650135" level="INFO">001f7b31d924</msg>
+<arg>${trim_wifi_mac}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2024-08-26T14:08:40.649780" elapsed="0.000435"/>
+</kw>
+<kw name="Get Regexp Matches" owner="String">
+<msg time="2024-08-26T14:08:40.651600" level="INFO">${ssid_wifi_hashkey} = ['TECHNEXION-RDTEST-5G wifi_001f7b31d924_544543484e4558494f4e2d5244544553542d3547_managed_psk']</msg>
+<var>${ssid_wifi_hashkey}</var>
+<arg>${service_log}</arg>
+<arg>${WIFI_SSID}\\s{1,9}wifi_${trim_wifi_mac}_\\w*</arg>
+<doc>Returns a list of all non-overlapping matches in the given string.</doc>
+<status status="PASS" start="2024-08-26T14:08:40.650531" elapsed="0.001171"/>
+</kw>
+<kw name="Convert To String" owner="BuiltIn">
+<msg time="2024-08-26T14:08:40.652780" level="INFO">${str_wifi_hashkey} = ['TECHNEXION-RDTEST-5G wifi_001f7b31d924_544543484e4558494f4e2d5244544553542d3547_managed_psk']</msg>
+<var>${str_wifi_hashkey}</var>
+<arg>${ssid_wifi_hashkey}</arg>
+<doc>Converts the given item to a Unicode string.</doc>
+<status status="PASS" start="2024-08-26T14:08:40.652261" elapsed="0.000581"/>
+</kw>
+<kw name="Get Regexp Matches" owner="String">
+<msg time="2024-08-26T14:08:40.653977" level="INFO">${wifi_hashkey} = ['wifi_001f7b31d924_544543484e4558494f4e2d5244544553542d3547_managed_psk']</msg>
+<var>${wifi_hashkey}</var>
+<arg>${str_wifi_hashkey}</arg>
+<arg>wifi_${trim_wifi_mac}_\\w*</arg>
+<doc>Returns a list of all non-overlapping matches in the given string.</doc>
+<status status="PASS" start="2024-08-26T14:08:40.653278" elapsed="0.000755"/>
+</kw>
+<kw name="Convert To String" owner="BuiltIn">
+<msg time="2024-08-26T14:08:40.654758" level="INFO">${wifi_hashkey} = wifi_001f7b31d924_544543484e4558494f4e2d5244544553542d3547_managed_psk</msg>
+<var>${wifi_hashkey}</var>
+<arg>@{wifi_hashkey}</arg>
+<doc>Converts the given item to a Unicode string.</doc>
+<status status="PASS" start="2024-08-26T14:08:40.654420" elapsed="0.000380"/>
+</kw>
+<return>
+<value>${wifi_hashkey}</value>
+<status status="PASS" start="2024-08-26T14:08:40.655070" elapsed="0.000087"/>
+</return>
+<msg time="2024-08-26T14:08:40.655426" level="INFO">${wifi_conn_phrase} = wifi_001f7b31d924_544543484e4558494f4e2d5244544553542d3547_managed_psk</msg>
+<var>${wifi_conn_phrase}</var>
+<status status="PASS" start="2024-08-26T14:08:24.124077" elapsed="16.531389"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2024-08-26T14:08:40.655991" level="INFO">wifi_001f7b31d924_544543484e4558494f4e2d5244544553542d3547_managed_psk</msg>
+<arg>${wifi_conn_phrase}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2024-08-26T14:08:40.655772" elapsed="0.000285"/>
+</kw>
+<kw name="Write Data" owner="SerialLibrary">
+<arg>connmanctl${\n}</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2024-08-26T14:08:40.656408" elapsed="0.000290"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2024-08-26T14:08:41.657372" level="INFO">Slept 1 second.</msg>
+<arg>1</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2024-08-26T14:08:40.656957" elapsed="1.000584"/>
+</kw>
+<kw name="Write Data" owner="SerialLibrary">
+<arg>agent on${\n}</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2024-08-26T14:08:41.657884" elapsed="0.000347"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2024-08-26T14:08:42.659774" level="INFO">Slept 1 second.</msg>
+<arg>1</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2024-08-26T14:08:41.659048" elapsed="1.001076"/>
+</kw>
+<kw name="Write Data" owner="SerialLibrary">
+<arg>connect ${wifi_conn_phrase}${\n}</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2024-08-26T14:08:42.660944" elapsed="0.000961"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2024-08-26T14:08:43.664056" level="INFO">Slept 1 second.</msg>
+<arg>1</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2024-08-26T14:08:42.662662" elapsed="1.001635"/>
+</kw>
+<kw name="Write Data" owner="SerialLibrary">
+<arg>${WIFI_PASSPHRASE}${\n}</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2024-08-26T14:08:43.664665" elapsed="0.000412"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2024-08-26T14:08:53.666559" level="INFO">Slept 10 seconds.</msg>
+<arg>10</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2024-08-26T14:08:43.666186" elapsed="10.000494"/>
+</kw>
+<kw name="Write Data" owner="SerialLibrary">
+<arg>state${\n}</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2024-08-26T14:08:53.666914" elapsed="0.000619"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2024-08-26T14:08:58.669211" level="INFO">Slept 5 seconds.</msg>
+<arg>5</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2024-08-26T14:08:53.667856" elapsed="5.001768"/>
+</kw>
+<kw name="Read All Data" owner="SerialLibrary">
+<msg time="2024-08-26T14:08:58.672021" level="INFO">${connamm_conf_log} = L           wifi_001f7b31d924_504f5745524d4554414c_managed_psk
+    ULONG-辦公室_5G   wifi_001f7b31d924_554c4f4e472de8bea6e585ace5aea45f3547_managed_psk
+    SIT_TP-Link_5G       wifi_001f7b31d924_534954...</msg>
+<var>${connamm_conf_log}</var>
+<arg>UTF-8</arg>
+<doc>Read all available data from the port's incoming buffer.</doc>
+<status status="PASS" start="2024-08-26T14:08:58.670737" elapsed="0.001426"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2024-08-26T14:08:58.673663" level="INFO">L           wifi_001f7b31d924_504f5745524d4554414c_managed_psk
+    ULONG-辦公室_5G   wifi_001f7b31d924_554c4f4e472de8bea6e585ace5aea45f3547_managed_psk
+    SIT_TP-Link_5G       wifi_001f7b31d924_5349545f54502d4c696e6b5f3547_managed_psk
+    ASUS_00_5G           wifi_001f7b31d924_415355535f30305f3547_managed_psk
+root@pico-imx6ul:/opt/thermal-imx-test# connmanctl
+[?2004hconnmanctl&gt; [KError getting VPN connections: The name net.connman.vpn was not provided by any .service filesconnmanctl&gt; [Kconnmanctl&gt; [Kconnmanctl&gt; [Kconnmanctl&gt; agent on
+[?2004l[?2004hconnmanctl&gt; [KAgent registered
+connmanctl&gt; connect wifi_001f7b31d924_544543484e4558494f4e2d5244544553542d33547_managed_psk
+[?2004l[?2004hconnmanctl&gt; [KError /net/connman/service/wifi_001f7b31d924_544543484e4558494f4e2d5244544553542d3547_managed_psk: Already connected
+connmanctl&gt; 82273585
+[?2004lError '82273585': Unknown command
+[?2004hconnmanctl&gt; state
+[?2004l[?2004hconnmanctl&gt; [K  State = ready
+  OfflineMode = False
+  SessionMode = False
+connmanctl&gt; </msg>
+<arg>${connamm_conf_log}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2024-08-26T14:08:58.672906" elapsed="0.000937"/>
+</kw>
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${connamm_conf_log}</arg>
+<arg>State = ready</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2024-08-26T14:08:58.674367" elapsed="0.000652"/>
+</kw>
+<kw name="Write Data" owner="SerialLibrary">
+<arg>exit${\n}</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2024-08-26T14:08:58.675524" elapsed="0.000578"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2024-08-26T14:08:59.677433" level="INFO">Slept 1 second.</msg>
+<arg>1</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2024-08-26T14:08:58.676640" elapsed="1.000911"/>
+</kw>
+<kw name="Wifi Link Signal Check" owner="Wifi_Connection_test">
+<kw name="Write Data" owner="SerialLibrary">
+<arg>iw dev wlan0 link${\n}</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2024-08-26T14:08:59.678700" elapsed="0.000212"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2024-08-26T14:09:00.679803" level="INFO">Slept 1 second.</msg>
+<arg>1</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2024-08-26T14:08:59.679088" elapsed="1.000939"/>
+</kw>
+<kw name="Read All Data" owner="SerialLibrary">
+<msg time="2024-08-26T14:09:00.681376" level="INFO">${wifisig_log} = exit
+[?2004l[?2004hconnmanctl&gt; [?2004l[Kroot@pico-imx6ul:/opt/thermal-imx-test# iw dev wlan0 link
+Connected to d4:3d:f3:ff:6e:49 (on wlan0)
+	SSID: TECHNEXION-RDTEST-5G
+	freq: 5240
+	RX: 2836...</msg>
+<var>${wifisig_log}</var>
+<arg>UTF-8</arg>
+<doc>Read all available data from the port's incoming buffer.</doc>
+<status status="PASS" start="2024-08-26T14:09:00.680556" elapsed="0.000868"/>
+</kw>
+<kw name="Should Contain" owner="BuiltIn">
+<arg>${wifisig_log}</arg>
+<arg>signal:</arg>
+<doc>Fails if ``container`` does not contain ``item`` one or more times.</doc>
+<status status="PASS" start="2024-08-26T14:09:00.681884" elapsed="0.000386"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2024-08-26T14:09:00.683392" level="INFO">Wifi Signal info: exit
+[?2004l[?2004hconnmanctl&gt; [?2004l[Kroot@pico-imx6ul:/opt/thermal-imx-test# iw dev wlan0 link
+Connected to d4:3d:f3:ff:6e:49 (on wlan0)
+	SSID: TECHNEXION-RDTEST-5G
+	freq: 5240
+	RX: 2836607660 bytes (135599773 packets)
+	TX: 1385657354 bytes (0 packets)
+	signal: -56 dBm
+	rx bitrate: 390.0 MBit/s VHT-MCS 8 80MHz short GI VHT-NSS 1
+	tx bitrate: 390.0 MBit/s VHT-MCS 8 80MHz short GI VHT-NSS 1
+root@pico-imx6ul:/opt/thermal-imx-test# </msg>
+<arg>Wifi Signal info: ${wifisig_log}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2024-08-26T14:09:00.683116" elapsed="0.000336"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2024-08-26T14:09:01.684195" level="INFO">Slept 1 second.</msg>
+<arg>1</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2024-08-26T14:09:00.683633" elapsed="1.000745"/>
+</kw>
+<status status="PASS" start="2024-08-26T14:08:59.678263" elapsed="2.006263"/>
+</kw>
+<status status="PASS" start="2024-08-26T14:08:24.123832" elapsed="37.560769"/>
+</kw>
+<kw name="Get Wifi Ip Address" owner="Wifi_Iperf_test">
+<kw name="Write Data" owner="SerialLibrary">
+<arg>ifconfig ${WIFI_INF}${\n}</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2024-08-26T14:09:01.685457" elapsed="0.000308"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2024-08-26T14:09:02.686621" level="INFO">Slept 1 second.</msg>
+<arg>1</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2024-08-26T14:09:01.685997" elapsed="1.000979"/>
+</kw>
+<kw name="Read All Data" owner="SerialLibrary">
+<msg time="2024-08-26T14:09:02.689213" level="INFO">${wifi_chk_log} = ifconfig wlan0
+wlan0: flags=-28605&lt;UP,BROADCAST,RUNNING,MULTICAST,DYNAMIC&gt;  mtu 1500
+        inet 10.88.88.250  netmask 255.255.248.0  broadcast 10.88.95.255
+        inet6 fe80::21f:7bff:fe31:d924 ...</msg>
+<var>${wifi_chk_log}</var>
+<arg>UTF-8</arg>
+<doc>Read all available data from the port's incoming buffer.</doc>
+<status status="PASS" start="2024-08-26T14:09:02.688073" elapsed="0.001279"/>
+</kw>
+<kw name="Get Regexp Matches" owner="String">
+<msg time="2024-08-26T14:09:02.691197" level="INFO">${wifi_ip_match} = ['inet 10.88.88.250']</msg>
+<var>${wifi_ip_match}</var>
+<arg>${wifi_chk_log}</arg>
+<arg>inet 10\.88\.\\d+\.\\d+</arg>
+<doc>Returns a list of all non-overlapping matches in the given string.</doc>
+<status status="PASS" start="2024-08-26T14:09:02.690130" elapsed="0.001123"/>
+</kw>
+<kw name="Strip String" owner="String">
+<msg time="2024-08-26T14:09:02.692436" level="INFO">${wifi_ip_string} = 10.88.88.250</msg>
+<var>${wifi_ip_string}</var>
+<arg>@{wifi_ip_match}</arg>
+<arg>characters=inet${SPACE}</arg>
+<doc>Remove leading and/or trailing whitespaces from the given string.</doc>
+<status status="PASS" start="2024-08-26T14:09:02.691898" elapsed="0.000617"/>
+</kw>
+<kw name="Set Global Variable" owner="BuiltIn">
+<msg time="2024-08-26T14:09:02.693557" level="INFO">${wifi_ip_string} = 10.88.88.250</msg>
+<arg>${wifi_ip_string}</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<status status="PASS" start="2024-08-26T14:09:02.693207" elapsed="0.000430"/>
+</kw>
+<return>
+<value>${wifi_ip_string}</value>
+<status status="PASS" start="2024-08-26T14:09:02.694192" elapsed="0.000117"/>
+</return>
+<status status="PASS" start="2024-08-26T14:09:01.684990" elapsed="1.009521"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2024-08-26T14:09:03.695119" level="INFO">Slept 1 second.</msg>
+<arg>1</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2024-08-26T14:09:02.694734" elapsed="1.000501"/>
+</kw>
+<kw name="Run Iperf3 Command in DUT as Server" owner="WIFI_Stress_12H">
+<kw name="Get Time" owner="BuiltIn">
+<msg time="2024-08-26T14:09:03.696833" level="INFO">${start_time} = 1724652543</msg>
+<var>${start_time}</var>
+<arg>epoch</arg>
+<doc>Returns the given time in the requested format.</doc>
+<status status="PASS" start="2024-08-26T14:09:03.696390" elapsed="0.000500"/>
+</kw>
+<kw name="Write Data" owner="SerialLibrary">
+<arg>iperf3 -s&amp;${\n}</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2024-08-26T14:09:03.697155" elapsed="0.000199"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2024-08-26T14:09:04.698521" level="INFO">Slept 1 second.</msg>
+<arg>1</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2024-08-26T14:09:03.697493" elapsed="1.001378"/>
+</kw>
+<kw name="Read All Data" owner="SerialLibrary">
+<msg time="2024-08-26T14:09:04.700791" level="INFO">${pid} = iperf3 -s&amp;
+[2] 13086
+root@pico-imx6ul:/opt/thermal-imx-test# iperf3: error - unable to start listener for connections: Address already in use
+iperf3: exiting
+</msg>
+<var>${pid}</var>
+<arg>UTF-8</arg>
+<doc>Read all available data from the port's incoming buffer.</doc>
+<status status="PASS" start="2024-08-26T14:09:04.699892" elapsed="0.001012"/>
+</kw>
+<kw name="Get Regexp Matches" owner="String">
+<msg time="2024-08-26T14:09:04.702741" level="INFO">${RE_PID} = ['13086']</msg>
+<var>${RE_PID}</var>
+<arg>${pid}</arg>
+<arg>\\[\\d+\]\\s+(\\d+)</arg>
+<arg>1</arg>
+<doc>Returns a list of all non-overlapping matches in the given string.</doc>
+<status status="PASS" start="2024-08-26T14:09:04.701619" elapsed="0.001219"/>
+</kw>
+<kw name="Get From List" owner="Collections">
+<msg time="2024-08-26T14:09:04.703413" level="INFO">${iperf3_PID} = 13086</msg>
+<var>${iperf3_PID}</var>
+<arg>${RE_PID}</arg>
+<arg>0</arg>
+<doc>Returns the value specified with an ``index`` from ``list``.</doc>
+<status status="PASS" start="2024-08-26T14:09:04.703297" elapsed="0.000131"/>
+</kw>
+<kw name="Set Global Variable" owner="BuiltIn">
+<msg time="2024-08-26T14:09:04.703684" level="INFO">${iperf3_PID} = 13086</msg>
+<arg>${iperf3_PID}</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<status status="PASS" start="2024-08-26T14:09:04.703548" elapsed="0.000205"/>
+</kw>
+<return>
+<value>${iperf3_PID}</value>
+<status status="PASS" start="2024-08-26T14:09:04.703803" elapsed="0.000035"/>
+</return>
+<status status="PASS" start="2024-08-26T14:09:03.695969" elapsed="1.007946"/>
+</kw>
+<status status="PASS" start="2024-08-26T14:08:24.123515" elapsed="40.580437"/>
+</kw>
+<kw name="Execute Bandwidth Chart" owner="WIFI_Stress_12H">
+<kw name="Start Process" owner="Process">
+<msg time="2024-08-26T14:09:04.704493" level="INFO">Starting process:
+python3 iperf3_chart_rev1.2.py</msg>
+<msg time="2024-08-26T14:09:04.711361" level="INFO">${result} = &lt;Popen: returncode: None args: ['python3', 'iperf3_chart_rev1.2.py']&gt;</msg>
+<var>${result}</var>
+<arg>python3</arg>
+<arg>iperf3_chart_rev1.2.py</arg>
+<doc>Starts a new process on background.</doc>
+<status status="PASS" start="2024-08-26T14:09:04.704366" elapsed="0.007213"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2024-08-26T14:09:04.714967" level="INFO">&lt;_io.BufferedReader name=10&gt;</msg>
+<arg>${result.stdout}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2024-08-26T14:09:04.712731" elapsed="0.002303"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2024-08-26T14:09:04.716461" level="INFO">stderr: &lt;_io.BufferedReader name=12&gt;</msg>
+<arg>stderr: ${result.stderr}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2024-08-26T14:09:04.715264" elapsed="0.001240"/>
+</kw>
+<status status="PASS" start="2024-08-26T14:09:04.704114" elapsed="0.012469"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2024-08-26T14:09:11.717091" level="INFO">Slept 7 seconds.</msg>
+<arg>7</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2024-08-26T14:09:04.716724" elapsed="7.000481"/>
+</kw>
+<kw name="Open Browser to Bandwidth Chart" owner="WIFI_Stress_12H">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2024-08-26T14:09:11.719274" level="INFO">Opening browser 'Chrome' to base url 'http://127.0.0.1:5000'.</msg>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2024-08-26T14:09:11.718595" elapsed="0.788369"/>
+</kw>
+<kw name="Set Window Size" owner="SeleniumLibrary">
+<arg>1400</arg>
+<arg>950</arg>
+<doc>Sets current windows size to given ``width`` and ``height``.</doc>
+<status status="PASS" start="2024-08-26T14:09:12.507283" elapsed="0.014419"/>
+</kw>
+<kw name="Set Selenium Speed" owner="SeleniumLibrary">
+<arg>${DELAY}</arg>
+<doc>Sets the delay that is waited after each Selenium command.</doc>
+<status status="PASS" start="2024-08-26T14:09:12.522028" elapsed="0.000376"/>
+</kw>
+<kw name="Title Should Be" owner="SeleniumLibrary">
+<msg time="2024-08-26T14:09:12.527151" level="INFO">Page title is 'Bandwidth Chart'.</msg>
+<arg>Bandwidth Chart</arg>
+<doc>Verifies that the current page title equals ``title``.</doc>
+<status status="PASS" start="2024-08-26T14:09:12.522644" elapsed="0.004574"/>
+</kw>
+<kw name="Reload Page" owner="SeleniumLibrary">
+<doc>Simulates user reloading page.</doc>
+<status status="PASS" start="2024-08-26T14:09:12.527430" elapsed="0.071817"/>
+</kw>
+<status status="PASS" start="2024-08-26T14:09:11.717765" elapsed="0.881611"/>
+</kw>
+<kw name="Input Test Parameter" owner="WIFI_Stress_12H">
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2024-08-26T14:09:12.600328" level="INFO">Typing text '10.88.88.250' into text field 'server_ip'.</msg>
+<arg>server_ip</arg>
+<arg>${wifi_ip_string}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2024-08-26T14:09:12.599967" elapsed="0.094926"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2024-08-26T14:09:12.695601" level="INFO">Typing text '0' into text field 'run_times'.</msg>
+<arg>run_times</arg>
+<arg>0</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2024-08-26T14:09:12.695285" elapsed="0.065560"/>
+</kw>
+<kw name="Select From List By Value" owner="SeleniumLibrary">
+<msg time="2024-08-26T14:09:12.761408" level="INFO">Selecting options from selection list 'mode' by value reverse.</msg>
+<arg>mode</arg>
+<arg>reverse</arg>
+<doc>Selects options from selection list ``locator`` by ``values``.</doc>
+<status status="PASS" start="2024-08-26T14:09:12.761124" elapsed="0.059113"/>
+</kw>
+<status status="PASS" start="2024-08-26T14:09:12.599619" elapsed="0.220738"/>
+</kw>
+<kw name="Submit Iperf3" owner="WIFI_Stress_12H">
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2024-08-26T14:09:12.821107" level="INFO">Clicking button 'startButton'.</msg>
+<arg>startButton</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2024-08-26T14:09:12.820929" elapsed="0.040854"/>
+</kw>
+<status status="PASS" start="2024-08-26T14:09:12.820597" elapsed="0.041304"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2024-08-26T14:09:42.862461" level="INFO">Slept 30 seconds.</msg>
+<arg>30</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2024-08-26T14:09:12.862174" elapsed="30.000511"/>
+</kw>
+<kw name="Capture Page Screenshot" owner="SeleniumLibrary">
+<msg time="2024-08-26T14:09:42.917603" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="WIFI_ScreenShot.png"&gt;&lt;img src="WIFI_ScreenShot.png" width="800px"&gt;&lt;/a&gt;</msg>
+<arg>WIFI_ScreenShot.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<status status="PASS" start="2024-08-26T14:09:42.863034" elapsed="0.054767"/>
+</kw>
+<kw name="Close Process" owner="WIFI_Stress_12H">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2024-08-26T14:09:42.918548" elapsed="0.062978"/>
+</kw>
+<kw name="Run Process" owner="Process">
+<msg time="2024-08-26T14:09:42.982217" level="INFO">Starting process:
+fuser -k 5000/tcp</msg>
+<msg time="2024-08-26T14:09:42.985621" level="INFO">Waiting for process to complete.</msg>
+<msg time="2024-08-26T14:09:43.042734" level="INFO">Process completed.</msg>
+<msg time="2024-08-26T14:09:43.043152" level="INFO">${result} = &lt;result object with rc 0&gt;</msg>
+<var>${result}</var>
+<arg>fuser -k 5000/tcp</arg>
+<arg>shell=True</arg>
+<doc>Runs a process and waits for it to complete.</doc>
+<status status="PASS" start="2024-08-26T14:09:42.981863" elapsed="0.061368"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2024-08-26T14:09:43.045508" level="INFO"> 2648962 2648963</msg>
+<arg>${result.stdout}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2024-08-26T14:09:43.043993" elapsed="0.001587"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2024-08-26T14:09:43.047318" level="INFO">stderr: 5000/tcp:           </msg>
+<arg>stderr: ${result.stderr}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2024-08-26T14:09:43.045871" elapsed="0.001517"/>
+</kw>
+<kw name="Terminate Iperf3 Process" owner="WIFI_Stress_12H">
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Terminating IPerf3 process with PID: ${iperf3_PID}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2024-08-26T14:09:43.048329" elapsed="0.000349"/>
+</kw>
+<kw name="Write Data" owner="SerialLibrary">
+<arg>kill ${iperf3_PID}${\n}</arg>
+<doc>Writes data into the port.</doc>
+<status status="PASS" start="2024-08-26T14:09:43.048997" elapsed="0.000495"/>
+</kw>
+<kw name="Sleep" owner="BuiltIn">
+<msg time="2024-08-26T14:09:45.050760" level="INFO">Slept 2 seconds.</msg>
+<arg>2</arg>
+<doc>Pauses the test executed for the given time.</doc>
+<status status="PASS" start="2024-08-26T14:09:43.049740" elapsed="2.001143"/>
+</kw>
+<kw name="Read All Data" owner="SerialLibrary">
+<msg time="2024-08-26T14:09:45.051598" level="INFO">${output} = Accepted connection from 10.88.89.151, port 34538
+[  5] local 10.88.88.250 port 5201 connected to 10.88.89.151 port 34548
+[  8] local 10.88.88.250 port 5201 connected to 10.88.89.151 port 34564
+[ 1...</msg>
+<var>${output}</var>
+<arg>UTF-8</arg>
+<doc>Read all available data from the port's incoming buffer.</doc>
+<status status="PASS" start="2024-08-26T14:09:45.051185" elapsed="0.000464"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<msg time="2024-08-26T14:09:45.052159" level="INFO">Accepted connection from 10.88.89.151, port 34538
+[  5] local 10.88.88.250 port 5201 connected to 10.88.89.151 port 34548
+[  8] local 10.88.88.250 port 5201 connected to 10.88.89.151 port 34564
+[ 10] local 10.88.88.250 port 5201 connected to 10.88.89.151 port 34568
+[ 12] local 10.88.88.250 port 5201 connected to 10.88.89.151 port 34578
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec  1.31 MBytes  11.0 Mbits/sec    0    120 KBytes       
+[  8]   0.00-1.00   sec  1.09 MBytes  9.17 Mbits/sec    0    106 KBytes       
+[ 10]   0.00-1.00   sec  1.08 MBytes  9.08 Mbits/sec    0    103 KBytes       
+[ 12]   0.00-1.00   sec   983 KBytes  8.05 Mbits/sec    0   97.6 KBytes       
+[SUM]   0.00-1.00   sec  4.44 MBytes  37.3 Mbits/sec    0             
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[  5]   1.00-2.00   sec   390 KBytes  3.20 Mbits/sec    0    141 KBytes       
+[  8]   1.00-2.00   sec   445 KBytes  3.65 Mbits/sec    0    123 KBytes       
+[ 10]   1.00-2.00   sec   467 KBytes  3.82 Mbits/sec    0    122 KBytes       
+[ 12]   1.00-2.00   sec   403 KBytes  3.30 Mbits/sec    0    112 KBytes       
+[SUM]   1.00-2.00   sec  1.67 MBytes  14.0 Mbits/sec    0             
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[  5]   2.00-3.00   sec   191 KBytes  1.56 Mbits/sec    4    100 KBytes       
+[  8]   2.00-3.00   sec  0.00 Bytes  0.00 bits/sec    2    120 KBytes       
+[ 10]   2.00-3.00   sec  0.00 Bytes  0.00 bits/sec    0    130 KBytes       
+[ 12]   2.00-3.00   sec   127 KBytes  1.04 Mbits/sec    5   72.1 KBytes       
+[SUM]   2.00-3.00   sec   318 KBytes  2.60 Mbits/sec   11             
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[  5]   3.00-4.00   sec   191 KBytes  1.56 Mbits/sec    4   50.9 KBytes       
+[  8]   3.00-4.00   sec   573 KBytes  4.69 Mbits/sec   37   65.0 KBytes       
+[ 10]   3.00-4.00   sec   551 KBytes  4.52 Mbits/sec   18   97.6 KBytes       
+[ 12]   3.00-4.00   sec   318 KBytes  2.61 Mbits/sec   28   90.5 KBytes       
+[SUM]   3.00-4.00   sec  1.59 MBytes  13.4 Mbits/sec   87             
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[  5]   4.00-5.00   sec  1.30 MBytes  10.9 Mbits/sec    0    165 KBytes       
+[  8]   4.00-5.00   sec   573 KBytes  4.68 Mbits/sec    0   73.5 KBytes       
+[ 10]   4.00-5.00   sec  1.12 MBytes  9.36 Mbits/sec    0    117 KBytes       
+[ 12]   4.00-5.00   sec  1.12 MBytes  9.36 Mbits/sec    0    107 KBytes       
+[SUM]   4.00-5.00   sec  4.10 MBytes  34.3 Mbits/sec    0             
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[  5]   5.00-6.00   sec  2.17 MBytes  18.3 Mbits/sec    0    257 KBytes       
+[  8]   5.00-6.00   sec   764 KBytes  6.27 Mbits/sec    0   77.8 KBytes       
+[ 10]   5.00-6.00   sec  1.12 MBytes  9.40 Mbits/sec    0    127 KBytes       
+[ 12]   5.00-6.00   sec  1.01 MBytes  8.46 Mbits/sec    0    117 KBytes       
+[SUM]   5.00-6.00   sec  5.05 MBytes  42.4 Mbits/sec    0             
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[  5]   6.00-7.00   sec  2.11 MBytes  17.8 Mbits/sec    0    351 KBytes       
+[  8]   6.00-7.00   sec   573 KBytes  4.70 Mbits/sec    0   83.4 KBytes       
+[ 10]   6.00-7.00   sec   792 KBytes  6.50 Mbits/sec    0    130 KBytes       
+[ 12]   6.00-7.00   sec   783 KBytes  6.43 Mbits/sec    0    119 KBytes       
+[SUM]   6.00-7.00   sec  4.21 MBytes  35.4 Mbits/sec    0             
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[  5]   7.00-8.00   sec  1.68 MBytes  14.1 Mbits/sec    2    321 KBytes       
+[  8]   7.00-8.00   sec   382 KBytes  3.12 Mbits/sec    0   87.7 KBytes       
+[ 10]   7.00-8.00   sec   779 KBytes  6.37 Mbits/sec    0    130 KBytes       
+[ 12]   7.00-8.00   sec   655 KBytes  5.35 Mbits/sec    0    119 KBytes       
+[SUM]   7.00-8.00   sec  3.45 MBytes  28.9 Mbits/sec    2             
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[  5]   8.00-9.00   sec  2.24 MBytes  18.8 Mbits/sec    0    356 KBytes       
+[  8]   8.00-9.00   sec   573 KBytes  4.70 Mbits/sec    0   91.9 K</msg>
+<arg>${output}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="PASS" start="2024-08-26T14:09:45.051947" elapsed="0.000284"/>
+</kw>
+<status status="PASS" start="2024-08-26T14:09:43.047851" elapsed="2.004464"/>
+</kw>
+<status status="PASS" start="2024-08-26T14:09:42.918183" elapsed="2.134200"/>
+</kw>
+<doc>WIFI Stress</doc>
+<tag>Test A-System and Function</tag>
+<status status="PASS" start="2024-08-26T14:08:24.122927" elapsed="80.929654"/>
+</test>
+<kw name="Run Keywords" owner="BuiltIn" type="TEARDOWN">
+<kw name="Close Serial Port" owner="Common_Params">
+<kw name="Delete All Ports" owner="SerialLibrary">
+<doc>Deletes all ports maintained in the library instance.</doc>
+<status status="PASS" start="2024-08-26T14:09:45.054174" elapsed="0.003163"/>
+</kw>
+<status status="PASS" start="2024-08-26T14:09:45.053866" elapsed="0.003575"/>
+</kw>
+<kw name="SSH Close All Connections" owner="Common_Params">
+<kw name="Close Connection" owner="SSHLibrary">
+<doc>Closes the current connection.</doc>
+<status status="PASS" start="2024-08-26T14:09:45.058161" elapsed="0.000493"/>
+</kw>
+<status status="PASS" start="2024-08-26T14:09:45.057676" elapsed="0.001033"/>
+</kw>
+<arg>Close Serial Port</arg>
+<arg>AND</arg>
+<arg>SSH Close All Connections</arg>
+<doc>Executes all the given keywords in a sequence.</doc>
+<status status="PASS" start="2024-08-26T14:09:45.053489" elapsed="0.005252"/>
+</kw>
+<status status="PASS" start="2024-08-26T14:08:21.726132" elapsed="83.332647"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="1" fail="0" skip="0">Test A-System and Function</stat>
+</tag>
+<suite>
+<stat pass="1" fail="0" skip="0" id="s1" name="PICO-IMX6UUL with PICO-PI">PICO-IMX6UUL with PICO-PI</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
