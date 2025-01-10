@@ -1,0 +1,72 @@
+Auther by : Raymond Chien
+
+
+Release Note: 
+
+2024/06/05 rev0.1: 
+initial ver.
+
+2024/06/05 rev0.2: 
+-added sender and reciever data
+
+2024/06/06 rev0.3: 
+-added saved iperf.txt raw data, run 10 loop for command
+
+2024/06/06 rev0.4: 
+-added infinite running for command and keep showing in html(flask_socketio) 
+
+2024/06/07 rev0.5: 
+-added width to show more throughput values in html,previous only can see 2763 counts.
+-added "Test Run #" in each iperf execution and also write into iperf.txt
+
+2024/06/07 rev0.6:
+-added Server IP input field in html page 
+-added Start iperf3 button to kick start run test  
+
+2024/06/07 rev0.7:
+-modified iperf tool for windows path under same path as script execution 
+-modified log path under same path as script execution
+-added if statement for checking iperf.txt file
+
+2024/06/11 rev0.8:
+-to get performance from iperf3 bi-direction mode (bidir)
+-added 4 values in index.html for each run 
+
+2024/06/11 rev0.9:
+-Integrate Normal/Reverse/Bidir mode to chart and execute command to get the performance
+
+2024/06/11 rev1.0:
+-modified the normal/reverse mode updating to chart correctly
+-html label for client/server distribute
+-added pipeline for iperf command 
+-modified raw data parsing 
+
+2024/06/11 rev1.1:
+-specify custom loops , default is 4000 run_times
+
+2024/06/26 rev1.2:
+-added timer for duration and stop timer while run times reached or ctrl+c python script
+-integrate infinite loop and specific run times together ,set to 0 means running infinitely. 
+-added datetime log into iperf.txt for each run
+
+2024/09/20 rev1.2.1:      
+-Added zoom feature for html by using mouse wheel to check out the data, but drag feature not working yet, need to check. 
+-Added flask_cors package to fix "ERR_BLOCKED_BY_RESPONSE.NotSameOrigin" issue
+
+2024/06/26 rev1.3:
+-Changed enter DUT through ssh input iperf command  
+-DUT turned to Client not previous Server side. 
+-Default Iperf3 server set to 10.88.92.1
+
+2024/09/20 rev1.4:
+-Added drop down list for iperf server ip to select 
+
+ <select id="server_ip" name="server_ip">
+            <option value="10.88.92.1">10.88.92.1</option>
+            <option value="10.88.93.1">10.88.93.1</option>
+            <option value="10.0.5.1">10.0.5.1</option>
+        </select>
+        
+        
+-Added zoom feature for html by using mouse wheel to check out the data, but drag feature not working yet, need to check. 
+-Added flask_cors package to fix "ERR_BLOCKED_BY_RESPONSE.NotSameOrigin" issue

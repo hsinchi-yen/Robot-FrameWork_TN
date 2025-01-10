@@ -1,0 +1,32 @@
+This iperf tool is used to track each iperf throughput and updating into the chart as html base  
+
+
+Necessary packges install: 
+
+Pip install paramiko 
+Pip install flask  
+Pip install flask_socketio  
+Pip install flask_cors 
+
+Windows: 
+
+1.Download iperf3 
+2.Start Server Iperf in DUT (iperf3 -s)
+3.Start iperf3_chart.py in Client
+4.Open browser input: http://localhost:5000/
+5.Input Client IP in the page 
+6.Select Iperf server ip from list
+7.Select mode and run times
+8.Start iperf button 
+
+
+Linux: 
+
+1.Sudo apt install iperf3 
+2.Start iperf3_chart.py in Client
+3.Open browser input: http://localhost:5000/
+4.Input Client IP in the page 
+5.Select Iperf server ip from list 
+6.Select mode and run times
+7.Start iperf button 
+

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!--not request icon-->
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bandwidth Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+    <style>
+        .chart-container {
+            width: 100%;
+
+            /* overflow-x: scroll; */
+        }
+
+        canvas {
+            width: 100%;
+            height: 700px;
+            /* height: auto; */
+        }
+
+        #duration-container {
+            font-size: 24px;
+            font-family: monospace;
+            text-align: center;
+        }
+
+        #duration {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+            color: hsl(0, 1%, 60%);
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 5px;
+            display: inline-block;
+            border-bottom: none;
+
+        }
+
+        .wifi-info-box {
+            position: absolute;
+            border: 1px solid #c2bec0;
+            padding: 2px;
+            width: 300px;
+            background-color: #ffffff;
+            box-shadow: 0 2px rgba(242, 240, 240, 0.1);
+            border-radius: 2px;
+            font-size: 12px;
+            /* or use fixed for consistent placement while scrolling */
+            right: 200px;
+            /* distance from the right edge */
+            top: 15px;
+            /* adjust this value for vertical positioning */
+        }
+
+        .wifi-info-box h3 {
+            margin: 0 0 5px;
+            font-size: 1em;
+            text-align: left;
+            font-family: sans-serif;
+            color: hsl(0, 1%, 41%);
+        }
+
+        .wifi-info-box p {
+            margin: 3px 0;
+            font-family: sans-serif;
+            color: hsl(0, 1%, 41%);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Bandwidth Chart</h1>
+    <form id="serverForm">
+        <label for="client_ip">Client IP:</label>
+        <input type="text" id="client_ip" name="client_ip" style="width: 100px;" required>
+        <label for="server_ip">Iperf Server:</label>
+        <input list="server_ips" id="server_ip" name="server_ip" placeholder="Select or Input" style="width: 110px;" required>
+        <datalist id="server_ips">
+            <option value="10.88.92.1">10.88.92.1</option>
+            <option value="10.88.93.1">10.88.93.1</option>
+            <option value="10.88.88.229">10.88.88.229</option>
+        </datalist>
+        <label for="mode">Mode:</label>
+        <select id="mode" name="mode">
+            <option value="normal">Normal Mode</option>
+            <option value="reverse">Reverse Mode</option>
+            <option value="bidir">Bi-Dir Mode</option>
+        </select>
+        <label for="run_times">Run Times:</label>
+        <input type="number" id="run_times" name="run_times" value="4000" style="width: 80px;" required>
+        <button type="submit" id="startButton">Start Iperf3</button>
+    </form>
+    <div class="wifi-info-box">
+        <h3>WiFi Information</h3>
+        <p id="wifi-info">
+            <strong>ESSID:</strong> {{ data.essid }}<br>
+            <strong>Frequency:</strong> {{ data.frequency }}<br>
+            <strong>BitRate:</strong> {{ data.bitrate }}<br>
+            <strong>Signal Lv:</strong> {{ data.signal_level }}
+        </p>
+    </div>
+    <div class="chart-container">
+        <canvas id="bandwidthChart"></canvas>
+
+        <div id="duration-container">
+            <span id="duration"></span>
+        </div>
+        <script>
+            const socket = io();
+
+            const txSenderBandwidths = [];
+            const txReceiverBandwidths = [];
+            const rxSenderBandwidths = [];
+            const rxReceiverBandwidths = [];
+
+            const ctx = document.getElementById('bandwidthChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'TX Sender [Client] (Mbits/sec)',
+                        data: txSenderBandwidths,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'RX Receiver [Server] (Mbits/sec)',
+                        data: txReceiverBandwidths,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'TX Sender [Server] (Mbits/sec)',
+                        data: rxSenderBandwidths,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'RX Receiver [Client] (Mbits/sec)',
+                        data: rxReceiverBandwidths,
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1
+                    }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false, // allow chart follow browser size
+                    scales: {
+                        y: {
+                            beginAtZero: true
+
+                        }
+                    },
+
+                    plugins: {
+                        zoom: {
+                            limits: {
+                                y: { min: 0, max: 1000, minRange: 50 }
+                            },
+                            pan: {
+                                enabled: true,
+                                mode: 'xy',
+                            },
+                            zoom: {
+                                wheel: {
+                                    enabled: false,
+                                },
+                                pinch: {
+                                    enabled: false,
+                                },
+                                mode: 'xy',
+                            }
+                        }
+                    }
+                }
+            });
+
+
+            socket.on('update_chart', (data) => {
+                txSenderBandwidths.push(data.tx_sender_throughput);
+                txReceiverBandwidths.push(data.tx_receiver_throughput);
+                rxSenderBandwidths.push(data.rx_sender_throughput);
+                rxReceiverBandwidths.push(data.rx_receiver_throughput);
+                chart.data.labels.push(`Run ${txSenderBandwidths.length}`);
+                chart.update();
+            });
+            socket.on('wifi_info', function (data) {
+                // update wifi info
+                const wifiInfoElement = document.getElementById('wifi-info');
+                wifiInfoElement.innerHTML = `
+                    <strong>ESSID:</strong> ${data.essid}<br>
+                    <strong>Frequency:</strong> ${data.frequency}<br>
+                    <strong>BitRate:</strong> ${data.bitrate}<br>
+                    <strong>Signal Lv:</strong> ${data.signal_level}
+                `;
+            });
+
+
+            let startTime;
+            let timerInterval;
+
+            function startTimer() {
+                startTime = new Date().getTime();
+
+                timerInterval = setInterval(updateTimer, 1000);
+                // document.getElementById('duration').style.borderBottom = '2px solid rgb(142, 137, 137)';  
+            }
+
+            function updateTimer() {
+                const currentTime = new Date().getTime();
+                const elapsedTime = currentTime - startTime;
+
+                const totalSeconds = Math.floor(elapsedTime / 1000);
+                const seconds = totalSeconds % 60;
+                const minutes = Math.floor(totalSeconds / 60) % 60;
+                const hours = Math.floor(totalSeconds / 3600) % 24;
+                const days = Math.floor(totalSeconds / 86400);
+                document.getElementById('duration').style.borderBottom = '2px solid rgb(142, 137, 137)';
+                let formattedDuration = `${seconds.toString().padStart(2, '0')}`;
+                let underlineWidth = 2;  // 2 string width initially
+
+                if (minutes > 0 || hours > 0 || days > 0) {
+                    formattedDuration = `${minutes.toString().padStart(2, '0')}:${formattedDuration}`;
+                    underlineWidth = 5;  // increase 5 string width
+                }
+
+                if (hours > 0 || days > 0) {
+                    formattedDuration = `${hours.toString().padStart(2, '0')}:${formattedDuration}`;
+                    underlineWidth = 8;  // increase 8 string width
+                }
+
+                if (days > 0) {
+                    formattedDuration = `${days}:${formattedDuration}`;
+                    underlineWidth = 10 + days.toString().length;  // based on days increase width
+                }
+
+                const durationElement = document.getElementById('duration');
+                durationElement.textContent = formattedDuration;
+                durationElement.style.width = `${underlineWidth}ch`;  // set element width，'ch'unit mean string width
+
+            }
+
+            function stopTimer() {
+                clearInterval(timerInterval);
+                console.log('Timer stopped.');
+            }
+
+            document.getElementById('serverForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                const clientIp = document.getElementById('client_ip').value;
+                const serverIp = document.getElementById('server_ip').value;
+                const mode = document.getElementById('mode').value;
+                const run_times = document.getElementById('run_times').value;
+                socket.emit('start_iperf3', { client_ip: clientIp, server_ip: serverIp, mode: mode, run_times: parseInt(run_times) });
+                startTimer();
+            });
+
+            socket.on('disconnect', () => {
+                stopTimer();
+            });
+
+            socket.on('stop_timer', () => {
+                stopTimer();
+            });
+        </script>
+</body>
+
+</html>
