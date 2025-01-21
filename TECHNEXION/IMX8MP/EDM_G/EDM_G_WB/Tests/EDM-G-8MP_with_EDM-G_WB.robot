@@ -29,6 +29,28 @@ Suite Teardown    Run Keywords    Close Serial Port       AND
 ##
 
 *** Test Cases ***
+AUDIO ISSUE
+    [Tags]              Test A-System and Function    
+    [Documentation]     AUDIO ISSUE Investigation
+    
+    Audio Issue with Reboot
+WIFI ISSUE
+    [Tags]              Test A-System and Function    
+    [Documentation]     Intermittent error with WLAN
+    
+    System reboot And WLAN device detection
+
+Case TNPT-6
+    [Tags]              Test A-System and Function    
+    [Documentation]     SOM and baseboard Information
+    Board Info
+    CPU Info
+    Memory Info
+    eMMC Info
+    GPU Info
+    Network Info
+    Uboot Info  
+    
 Case TNPT-11 
     [Tags]              Test A-System and Function    
     [Documentation]     Giga LAN - Ethernet Interface UP/DOWN
@@ -148,6 +170,11 @@ Case TNPT-34
     [Documentation]     Audio Jack
     ...                 Share the same test case TN35, use the headphone set for test
     Audio Jack Test
+
+Case TNPT-525
+    [Tags]              Test A-System and Function    
+    [Documentation]     Audio Codec Sample Rate Test
+    Audio Codec Sample Rate Test
 
 Case TNPT-35
     [Tags]              Test A-System and Function    
@@ -328,3 +355,8 @@ Case TNPT-177
     [Tags]              Test A-System and Function    stress  
     [Documentation]     WIFI Stress 12H
     Start WIFI stress
+
+Case TNPT-167 
+    [Tags]              Test A-System and Function    stress  
+    [Documentation]     CPU_MEM_GPU_WIFI_Stresss
+    Start CPU MEM GPU WIFI stress

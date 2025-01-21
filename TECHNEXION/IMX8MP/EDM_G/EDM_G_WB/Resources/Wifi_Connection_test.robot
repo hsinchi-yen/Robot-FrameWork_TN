@@ -6,7 +6,8 @@ Library        String
 
 
 *** Variables ***
-${WIFI_SSID}            TECHNEXION-RDTEST-5G-WIFI5
+#${WIFI_SSID}            TECHNEXION-RDTEST-5G
+${WIFI_SSID}            TECHNEXION-RDTEST
 ${WIFI_PASSPHRASE}      82273585
 
 ${WIFI_TETHER_SSID}     ROBOT_SIT_AP
