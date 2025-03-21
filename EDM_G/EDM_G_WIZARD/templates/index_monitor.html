@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Monitoring Chart</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script> 
+   
+    <link rel="icon" href="data:,">
+    <style>
+        .chart-container {
+            width: 100%;
+            height: 700px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>System Monitoring Chart</h1>
+    
+    
+    <form id="serverForm">
+        <label for="client_ip">Client IP:</label>
+        <input type="text" id="client_ip" name="client_ip" style="width: 110px;" required>
+        <input type="text" id="filename" placeholder="Enter filename" value="thermal_cpu.log" style="width: 200px;">
+        <button type="submit" id="startMonitoring">Start Monitoring</button>
+
+    </form>
+
+
+    <div class="chart-container">
+        <canvas id="monitoringChart"></canvas>
+    </div>
+    <script>
+
+        const socket = io();
+
+        const cpuUsages = [];
+        const temperatures = [];
+        const memoryTestFailures = [];
+        const tx_Sender_throughput = [];
+        const rx_Receiver_throughput = [];
+        const elapsedTimes = [];
+
+      
+        const ctx = document.getElementById('monitoringChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: elapsedTimes,
+                datasets: [{
+                    label: 'CPU Usage (%)',
+                    data: cpuUsages,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    yAxisID: 'y'
+                },
+                {
+                    label: 'Temperature (°C)',
+                    data: temperatures,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1,
+                    yAxisID: 'y'
+                },
+                {
+                    label: 'Memory Test Failures',
+                    data: memoryTestFailures,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    yAxisID: 'y'
+                },
+                {
+                    label: 'TX Sender',
+                    data: tx_Sender_throughput,
+                    backgroundColor: 'rgba(54, 235, 217, 0.2)',
+                    borderColor: 'rgba(54, 235, 217, 1)',
+                    borderWidth: 1,
+                    yAxisID: 'y'
+                },
+                {
+                    label: 'RX Receiver',
+                    data: rx_Receiver_throughput,
+                    backgroundColor: 'rgba(54, 90, 235, 0.2)',
+                    borderColor: 'rgba(54, 90, 235, 1)',
+                    borderWidth: 1,
+                    yAxisID: 'y'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'category',
+                        title: {
+                            display: true,
+                            text: 'Elapsed Time'
+                        },
+                        ticks: {
+                            autoSkip: true,
+                            maxTicksLimit: 20
+                        }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        min: -40,
+                        max: 200,
+                        title: {
+                            display: true,
+                            text: 'Values'
+                        },
+                        ticks: {
+                            autoSkip: true,
+                            maxTicksLimit: 20
+                        }
+                    }
+                },
+                animation: {
+                    duration: 0
+                },
+                plugins: {
+                        zoom: {
+                            limits: {
+                                y: { min: -40, max: 200, minRange: 50 }
+                            },
+                            pan: {
+                                enabled: true,
+                                mode: 'xy',
+                                rangeMin: {
+                                    x: null, 
+                                    y: -40  
+                                },
+                                rangeMax: {
+                                    x: null, 
+                                    y: 200  
+                                },
+                                onPan: function () {
+                                    console.log('Panning event triggered!');
+                                }
+                            },
+                            zoom: {
+                                
+                                wheel: {
+                                    enabled: false,
+                                    passive: false,
+                                },
+                                pinch: {
+                                    enabled: false,
+                                },
+                                mode: 'xy',
+                            }
+                        }
+                    }
+                }
+            });                   
+
+        // socket.on('update_chart', (data) => {
+    
+        //     cpuUsages.data.push(data.cpu_usage);
+        //     temperatures.push(data.temperature);
+        //     memoryTestFailures.push(data.memory_test_failure);
+        //     elapsedTimes.push(data.elapsed_time);
+            
+        //      // 動態調整 X 軸
+        //     chart.options.scales.x.min = elapsedTimes[0];
+        //     chart.options.scales.x.max = elapsedTimes[elapsedTimes.length - 1];
+            
+
+        //     chart.update();
+        // });
+        socket.on('update_chart', function(data) {
+        if (data.elapsed_time) {
+        chart.data.labels.push(data.elapsed_time);
+        }
+        if (data.cpu_usage !== undefined) {
+        chart.data.datasets[0].data.push(data.cpu_usage);
+        }
+        if (data.temperature !== undefined) {
+        chart.data.datasets[1].data.push(data.temperature);
+        }
+        if (data.memory_test_failure !== undefined) {
+        chart.data.datasets[2].data.push(data.memory_test_failure);
+        } else {
+        chart.data.datasets[2].data.push(null); // Push null if memory_test_failure is missing
+        }
+        if (data.tx_sender_throughput !== undefined) {
+        chart.data.datasets[3].data.push(data.tx_sender_throughput);
+        } else {
+        chart.data.datasets[3].data.push(null); // Push null if TX is missing
+        }
+        if (data.rx_receiver_throughput !== undefined) {
+        chart.data.datasets[4].data.push(data.rx_receiver_throughput);
+        } else {
+        chart.data.datasets[4].data.push(null); // Push null if RX is missing
+        }
+        chart.update();
+        });
+
+        document.getElementById('startMonitoring').addEventListener('click', (event) => {
+            event.preventDefault(); // prevent submit button and refresh page
+            const filename = document.getElementById('filename').value;
+            const clientIp = document.getElementById('client_ip').value;
+
+            //send socket.io event
+            socket.emit('start_monitoring', { filename: filename, client_ip:clientIp });
+        });
+    </script>
+</body>
+
+</html>
